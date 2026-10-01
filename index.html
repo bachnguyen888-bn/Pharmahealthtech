@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>MFP Refund Check</title>
+<link rel="icon" href="data:,">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Fallbacks so the app stays usable if the Tailwind CDN cannot load. */
+  [hidden] { display: none !important; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  table { border-collapse: collapse; }
+  th, td { padding: 6px 10px; text-align: left; vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .nowrap { white-space: nowrap; }
+  .overflow-x-auto { overflow-x: auto; }
+  .overflow-auto { overflow: auto; }
+  .min-w-0 { min-width: 0; }
+  .max-h-80 { max-height: 20rem; }
+  .max-h-96 { max-height: 24rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .print-only { display: none; }
+  @media print {
+    @page { margin: 12mm; }
+    .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    body { background: #fff !important; }
+    .card { break-inside: avoid; box-shadow: none !important; }
+    .card, .card * { overflow: visible !important; }
+    .scroll-box { max-height: none !important; }
+  }
+</style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+<noscript><p style="padding:16px;background:#fee2e2">MFP Refund Check needs JavaScript. It runs only inside this browser tab.</p></noscript>
+
+<header class="no-print border-b border-slate-200 bg-white">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-start justify-between gap-3 px-4 py-4">
+    <div class="min-w-0">
+      <h1 class="text-xl font-bold tracking-tight sm:text-2xl">MFP Refund Check</h1>
+      <p class="text-sm text-slate-600">Audit Medicare Transaction Facilitator (MTF) 835 remittances for Maximum Fair Price refunds.</p>
+    </div>
+    <div class="flex w-full min-w-0 flex-col items-start gap-1 sm:w-auto sm:items-end">
+      <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-800">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd"/></svg>
+        Runs on your computer. Nothing is uploaded.
+      </span>
+      <details class="max-w-md text-sm">
+        <summary class="cursor-pointer text-emerald-800 underline decoration-dotted sm:text-right">How do I know?</summary>
+        <p class="mt-2 rounded-lg bg-slate-50 p-3 text-slate-700">The first tag inside this page's &lt;head&gt; is a Content-Security-Policy, a rule your browser enforces on the page. It sets <code>connect-src 'none'</code> (no fetch, XMLHttpRequest, WebSocket or beacon connections), <code>form-action 'none'</code> (no form posts), <code>img-src data:</code> (no remote images) and <code>default-src 'none'</code> (no other network loads); the only thing it may load from the internet is the Tailwind styling script from cdn.tailwindcss.com. Your files are read into memory with the browser's File API, are never written to browser storage, and are gone when you refresh or click "Clear all data". To check for yourself, open your browser's developer tools (F12), watch the Network tab while you load a file and see that nothing is sent, or turn off Wi-Fi after the page opens and see that everything keeps working.</p>
+      </details>
+    </div>
+  </div>
+</header>
+
+<div class="print-only" style="margin-bottom:12px">
+  <strong style="font-size:18px">MFP Refund Check: summary</strong><br>
+  <span>Printed <span id="printDate"></span>. Contains no patient names, Rx numbers or claim numbers.</span>
+</div>
+
+<main class="mx-auto max-w-7xl space-y-6 px-4 py-6">
+
+  <!-- Input -->
+  <section class="no-print grid gap-4 lg:grid-cols-3" aria-label="Load files">
+    <div id="dropZone" class="rounded-xl border-2 border-dashed border-slate-300 bg-white p-6 text-center transition-colors lg:col-span-2">
+      <p class="font-semibold">Drop MTF 835 files here</p>
+      <p class="mt-1 text-sm text-slate-500">.835, .txt, .edi, .x12 or any other extension. Several files at once is fine. They are read inside this browser tab only.</p>
+      <div class="mt-4 flex flex-wrap justify-center gap-2">
+        <label class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2">
+          Choose files
+          <input id="fileInput" type="file" multiple class="sr-only">
+        </label>
+        <button id="demoBtn" type="button" class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">Load demo data</button>
+      </div>
+      <p id="status" class="mt-3 min-h-[1.25rem] text-sm text-slate-600" role="status" aria-live="polite"></p>
+    </div>
+    <div class="space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+      <label class="flex items-start gap-3">
+        <input id="privacyToggle" type="checkbox" checked class="mt-1 h-4 w-4 accent-emerald-700">
+        <span><span class="font-semibold">Privacy mode</span>
+          <span class="block text-sm text-slate-500">Hides patient names and shows Rx numbers as the last 4 digits only.</span></span>
+      </label>
+      <label class="flex items-start gap-3">
+        <input id="no340bToggle" type="checkbox" class="mt-1 h-4 w-4 accent-emerald-700">
+        <span><span class="font-semibold">This pharmacy has NO 340B contract-pharmacy agreements.</span>
+          <span class="block text-sm text-slate-500">Marks every N907 claim still inside its dispute window as a strong dispute candidate.</span></span>
+      </label>
+      <button id="clearBtn" type="button" class="w-full rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500">Clear all data</button>
+    </div>
+  </section>
+
+  <!-- Parse log -->
+  <section class="no-print" aria-label="Parse log">
+    <details id="logDetails" class="rounded-xl border border-slate-200 bg-white">
+      <summary class="cursor-pointer px-4 py-3 font-semibold">Parse log <span id="logSummary" class="text-sm font-normal text-slate-500">nothing loaded</span></summary>
+      <div id="logBody" class="scroll-box max-h-96 overflow-auto px-4 pb-4 font-mono text-xs leading-relaxed"></div>
+    </details>
+  </section>
+
+  <div id="emptyState" class="no-print rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
+    No data loaded yet. Drop an MTF 835 file above, or click <strong>Load demo data</strong> to try it with synthetic claims.
+  </div>
+
+  <div id="results" class="space-y-8" hidden>
+    <!-- Summary cards -->
+    <section aria-labelledby="summaryTitle">
+      <div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+        <h2 id="summaryTitle" class="text-lg font-semibold">Summary</h2>
+        <div class="no-print flex flex-wrap gap-2">
+          <button id="gfiBtn" type="button" class="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50">GFI worksheet (CSV)</button>
+          <button id="deidBtn" type="button" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50">De-identified summary (CSV)</button>
+          <button id="printBtn" type="button" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50">Print summary</button>
+        </div>
+      </div>
+      <div id="cards" class="grid grid-cols-2 gap-3 sm:grid-cols-4"></div>
+      <p class="no-print mt-2 text-xs text-slate-500">The GFI worksheet contains patient data (Rx numbers, dates of service). The de-identified summary has counts and dollars only and is the only export safe to share before a BAA. Tip: in Excel, open CSVs with Data → From Text/CSV and set ID columns to Text so leading zeros and long claim numbers are kept.</p>
+    </section>
+
+    <!-- Breakdowns -->
+    <section aria-labelledby="bdTitle">
+      <h2 id="bdTitle" class="no-print mb-3 text-lg font-semibold">Breakdowns</h2>
+      <div class="space-y-4">
+        <div id="bdCategory" class="card min-w-0"></div>
+        <div class="no-print grid gap-4 lg:grid-cols-2">
+          <div id="bdPayer" class="min-w-0"></div>
+          <div id="bdLabeler" class="min-w-0"></div>
+          <div id="bdNdc" class="min-w-0 lg:col-span-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Action queue -->
+    <section class="no-print" aria-labelledby="queueTitle">
+      <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="queueTitle" class="text-lg font-semibold">Action queue</h2>
+        <span id="queueCount" class="text-sm text-slate-500"></span>
+      </div>
+      <div class="mb-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <label class="text-xs font-medium text-slate-600">Show
+          <select id="fView" class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm">
+            <option value="action">Needs action (gap or flag)</option>
+            <option value="all">All claims</option>
+          </select></label>
+        <label class="text-xs font-medium text-slate-600">Category
+          <select id="fCategory" class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"></select></label>
+        <label class="text-xs font-medium text-slate-600">Status
+          <select id="fStatus" class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"></select></label>
+        <label class="text-xs font-medium text-slate-600">Payer
+          <select id="fPayer" class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"></select></label>
+        <label class="text-xs font-medium text-slate-600">Search
+          <input id="fSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Rx, ICN, NDC, RARC…" class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm"></label>
+      </div>
+      <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <table class="min-w-full text-sm">
+          <thead id="queueHead" class="bg-slate-100 text-xs uppercase tracking-wide text-slate-600"></thead>
+          <tbody id="queueBody"></tbody>
+        </table>
+      </div>
+      <div class="mt-2 text-center"><button id="queueMore" type="button" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm hover:bg-slate-50" hidden>Show more</button></div>
+    </section>
+
+    <!-- Ledger -->
+    <section class="no-print" aria-labelledby="ledgerTitle">
+      <h2 id="ledgerTitle" class="mb-1 text-lg font-semibold">Ledger: provider adjustments (PLB)</h2>
+      <p class="mb-3 text-sm text-slate-500">WO = overpayment recovery (clawback), FB = forwarding balance. X12 convention: a positive PLB amount is taken out of the payment; a negative amount is added to it.</p>
+      <div id="ledger"></div>
+    </section>
+
+    <!-- Payments -->
+    <section class="no-print" aria-labelledby="paymentsTitle">
+      <h2 id="paymentsTitle" class="mb-1 text-lg font-semibold">Payments (one row per 835 transaction)</h2>
+      <p class="mb-3 text-sm text-slate-500">Balance check: BPR02 total paid should equal the claim payments (CLP04) minus PLB adjustments.</p>
+      <div id="payments"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="no-print mx-auto max-w-7xl px-4 pb-8 text-xs text-slate-500">
+  MFP Refund Check works only in this browser tab: no storage, no uploads, no tracking. It is an audit aid, not legal or billing advice; check every claim against the MTF's own guidance before you file. Classification text and deadlines are set in <code>CONFIG</code> at the top of the script.
+</footer>
+
+<script>
+'use strict';
+/* ==========================================================================
+   MFP Refund Check
+   Audits Medicare Transaction Facilitator (MTF) 835 remittances
+   (ASC X12 005010X221A1) entirely inside this browser tab.
+   No network I/O, no browser storage: data lives in `state` until refresh.
+   ========================================================================== */
+
+/* ---------- 1. CONFIG: edit classification text and windows here ---------- */
+const CONFIG = {
+  // MTF rule (spec): the dispute / GFI window closes 120 days after the remittance date.
+  gfiWindowDays: 120,
+  // Spec: 0-30 days left = Urgent, more than 30 = Open, below 0 = Expired.
+  urgentDays: 30,
+  // MTF rule: CLP02 = 22 marks a reversal; REF*F8 then carries the original claim's ICN.
+  reversalStatus: '22',
+  // MTF rule: remark codes (RARC) arrive in LQ*HE on the service line.
+  // ASSUMPTION: when a claim carries several of these codes, the first one listed here wins.
+  rarcCategories: {
+    N907: '340B flag: dispute if the pharmacy has no 340B contract-pharmacy agreement or the unit was not 340B-replenished',
+    N908: 'Marked as bought at MFP up front: verify against purchase invoices',
+    N909: 'Paid by a non-standard method: compare paid vs SDRA',
+    N910: 'No refund at this time: contact manufacturer / file GFI',
+    N911: 'Blocked by a Part D plan data error: contact the plan',
+  },
+  otherCategories: {
+    REVERSAL: 'Reversal',
+    // ASSUMPTION: a short-paid claim whose remark code is not listed above is flagged for review, not "OK".
+    OTHER_RARC: 'Other remark code: look up the RARC and review',
+    SHORT_PAY: 'Unexplained short-pay',
+    OK: 'OK',
+  },
+  strongCandidateLabel: 'Strong dispute candidate',
+  // MTF rule (spec): PLB reason codes seen on MTF remittances.
+  plbReasons: { WO: 'Overpayment recovery (clawback)', FB: 'Forwarding balance' },
+  queuePageSize: 200,
+};
+
+const CATEGORY_LABELS = { ...CONFIG.rarcCategories, ...CONFIG.otherCategories };
+const CATEGORY_ORDER = Object.keys(CATEGORY_LABELS);
+const CLOCK_ORDER = ['Expired', 'Urgent', 'Open', 'No date'];
+
+/* ---------- 2. State (memory only) ---------- */
+const state = {
+  files: [], transactions: [], claims: [], plb: [], log: [], txKeys: new Set(),
+  derived: [], selfTests: null, privacy: true, no340B: false,
+  sort: { key: 'daysLeft', dir: 'asc' },
+  filters: { view: 'action', category: '', status: '', payer: '', search: '' },
+  queueLimit: CONFIG.queuePageSize,
+};
+let seq = 0;
+
+/* ---------- 3. Small utilities ---------- */
+const $ = (id) => document.getElementById(id);
+const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+function esc(value) { return String(value ?? '').replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch]); }
+function plural(n, word) { return `${n} ${word}${n === 1 ? '' : 's'}`; }
+
+const USD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+function fmtMoney(cents) { return cents == null ? '' : USD.format(cents / 100); }
+function centsToPlain(cents) {
+  const abs = Math.abs(cents);
+  return (cents < 0 ? '-' : '') + Math.floor(abs / 100) + '.' + String(abs % 100).padStart(2, '0');
+}
+
+/** Parse an X12 decimal ("412.5", "-128.40", ".75") into integer cents.
+ *  Returns null for an empty value and NaN for anything that is not a number. */
+function toCents(value) {
+  const s = String(value ?? '').trim();
+  if (s === '') return null;
+  const m = /^([+-]?)(\d*)(?:\.(\d*))?$/.exec(s);
+  if (!m || (m[2] === '' && !m[3])) return NaN;
+  const frac = (m[3] || '') + '000';
+  let cents = Number(m[2] || '0') * 100 + Number(frac.slice(0, 2));
+  if (Number(frac[2]) >= 5) cents += 1; // ASSUMPTION: more than 2 decimals rounds half away from zero
+  if (!Number.isSafeInteger(cents)) return NaN;
+  return m[1] === '-' && cents !== 0 ? -cents : cents;
+}
+function requireCents(value, label) {
+  const c = toCents(value);
+  if (c === null) throw new Error(`${label} is empty; segment skipped.`);
+  if (Number.isNaN(c)) throw new Error(`${label} is not a valid amount; segment skipped.`);
+  return c;
+}
+function optionalCents(value, label) {
+  const c = toCents(value);
+  if (Number.isNaN(c)) throw new Error(`${label} is not a valid amount; segment skipped.`);
+  return c;
+}
+function parseQty(value, label) {
+  const s = String(value ?? '').trim();
+  if (s === '') return null;
+  if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) throw new Error(`${label} is not a valid quantity; segment skipped.`);
+  return Number(s);
+}
+
+// Dates are whole days since 1970-01-01 at UTC midnight, so date math never
+// drifts across time zones or daylight-saving changes.
+const DAY_MS = 86400000;
+function x12DateToDay(value) {
+  const s = String(value ?? '').trim();
+  if (!/^\d{8}$/.test(s)) return null;
+  const y = +s.slice(0, 4), m = +s.slice(4, 6), d = +s.slice(6, 8);
+  const t = Date.UTC(y, m - 1, d);
+  const check = new Date(t);
+  if (check.getUTCFullYear() !== y || check.getUTCMonth() !== m - 1 || check.getUTCDate() !== d) return null;
+  return t / DAY_MS;
+}
+function dayToIso(day) { return day == null ? '' : new Date(day * DAY_MS).toISOString().slice(0, 10); }
+function dayToX12(day) { return dayToIso(day).replace(/-/g, ''); }
+/** Today's calendar date on this computer, as a UTC-midnight day number. */
+function localToday(now = new Date()) { return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / DAY_MS; }
+
+// MTF rule: SVC01 carries an 11-digit NDC; the labeler is its first 5 digits.
+function normalizeNdc(raw) {
+  const digits = String(raw ?? '').replace(/[-\s]/g, '');
+  return /^\d{11}$/.test(digits) ? digits : '';
+}
+function fmtNdc(ndc11, raw) { return ndc11 ? `${ndc11.slice(0, 5)}-${ndc11.slice(5, 9)}-${ndc11.slice(9)}` : (raw || ''); }
+function labelerKey(c) { return c.ndc11 ? c.ndc11.slice(0, 5) : '(no valid NDC-11)'; }
+function ndcKey(c) { return fmtNdc(c.ndc11, c.ndcRaw) || '(no NDC)'; }
+function monthKey(c) { return c.dosDay == null ? '(no date of service)' : dayToIso(c.dosDay).slice(0, 7); }
+function maskTail(value) { const s = String(value ?? ''); return s.length > 4 ? '•••' + s.slice(-4) : s; }
+function patientName(c) {
+  if (!c.patient) return '';
+  const { last, first, middle } = c.patient;
+  return [last, [first, middle].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+}
+
+/** Fast non-cryptographic 53-bit hash (cyrb53), used only to spot duplicate transactions. */
+function hashString(str) {
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36) + ':' + str.length;
+}
+
+/* ---------- 4. X12 parser ---------- */
+
+/** Read delimiters from the ISA header at `pos`. ISA is fixed width (106 chars):
+ *  element separator at index 3, component separator (ISA16) at 104, segment
+ *  terminator at 105. The MTF uses * : ^ ~ (^ is the ISA11 repetition separator).
+ *  We find the 16th element separator, which sits at index 103 in a standard ISA. */
+function detectDelimiters(text, pos = 0) {
+  if (text.substr(pos, 3) !== 'ISA') return null;
+  const element = text[pos + 3];
+  if (!element || /[A-Za-z0-9\s]/.test(element)) return null;
+  let sepIdx = -1;
+  for (let i = pos + 3, count = 0; i < text.length && i < pos + 250; i++) {
+    if (text[i] === element && ++count === 16) { sepIdx = i; break; }
+  }
+  if (sepIdx === -1) return null;
+  const component = text[sepIdx + 1];
+  const segment = text[sepIdx + 2];
+  if (!component || !segment || /[A-Za-z0-9 ]/.test(component) || /[A-Za-z0-9 ]/.test(segment)) return null;
+  if (new Set([element, component, segment]).size !== 3) return null;
+  return {
+    element, component, segment,
+    newlineTerminator: segment === '\r' || segment === '\n',
+    // ASSUMPTION: an ISA that is not padded to 106 chars is still accepted (with a warning).
+    fixedWidth: sepIdx === pos + 103,
+    isaEnd: sepIdx + 3,
+  };
+}
+
+/** True when position i starts a segment (only whitespace back to the previous terminator). */
+function isSegmentStart(text, i, d) {
+  for (let j = i - 1; j >= 0; j--) {
+    const ch = text[j];
+    if (ch === d.segment) return true;
+    if (ch === '\r' || ch === '\n') { if (d.newlineTerminator) return true; continue; }
+    if (ch === ' ' || ch === '\t') continue;
+    return false;
+  }
+  return true;
+}
+
+/** Index just past the IEA segment that closes the interchange (or end of text). */
+function findInterchangeEnd(text, d, from) {
+  const marker = 'IEA' + d.element;
+  for (let i = text.indexOf(marker, from); i !== -1; i = text.indexOf(marker, i + 3)) {
+    if (!isSegmentStart(text, i, d)) continue;
+    if (d.newlineTerminator) {
+      const rel = text.slice(i).search(/\r\n|\r|\n/);
+      return rel < 0 ? text.length : i + rel + (text.substr(i + rel, 2) === '\r\n' ? 2 : 1);
+    }
+    const t = text.indexOf(d.segment, i);
+    return t < 0 ? text.length : t + 1;
+  }
+  return text.length;
+}
+
+/** Split a file into ISA…IEA interchanges, each with its own delimiters. */
+function findInterchanges(text, log) {
+  const found = [];
+  let pos = text.indexOf('ISA');
+  if (pos > 0 && text.slice(0, pos).trim()) log('warn', `${pos} characters before the first ISA segment were ignored.`);
+  while (pos !== -1) {
+    const d = detectDelimiters(text, pos);
+    if (!d) {
+      log('warn', `Text "ISA" at character ${pos} is not a readable ISA header; ignored.`);
+      pos = text.indexOf('ISA', pos + 3);
+      continue;
+    }
+    if (!d.fixedWidth) log('warn', `ISA header at character ${pos} is not the standard 106 characters; delimiters were found by counting separators.`);
+    const end = findInterchangeEnd(text, d, d.isaEnd);
+    found.push({ text: text.slice(pos, end), delims: d });
+    const next = text.indexOf('ISA', end);
+    const between = text.slice(end, next === -1 ? text.length : next).trim();
+    if (between) log('warn', `${between.length} characters after an IEA segment were ignored.`);
+    pos = next;
+  }
+  return found;
+}
+
+/** Split one interchange into segment strings. Tolerates CR/LF and indentation
+ *  around terminators, and files with or without line breaks. */
+function splitSegments(text, d) {
+  const pieces = d.newlineTerminator ? text.split(/\r\n|\r|\n/) : text.split(d.segment);
+  const segments = [];
+  for (const piece of pieces) {
+    const s = piece.trim();
+    if (s) segments.push(s);
+  }
+  return segments;
+}
+
+/** Parse every 835 transaction in one file. Never throws: a bad segment is
+ *  skipped, counted and logged, and parsing carries on. */
+function parse835(text, fileName) {
+  const res = { fileName, interchanges: 0, groups: 0, otherTx: 0, segments: 0, skipped: 0, ignored: {}, transactions: [], log: [] };
+  const log = (level, msg, extra = {}) => res.log.push({ level, file: fileName, msg, ...extra });
+  const src = String(text ?? '').replace(/^﻿/, '');
+  const interchanges = findInterchanges(src, log);
+  if (!interchanges.length) {
+    log('error', 'No ISA segment found, so this is not an X12 file. Nothing was read from it.');
+    return res;
+  }
+  let segNo = 0;
+  for (const ic of interchanges) {
+    const ctx = { res, d: ic.delims, log, tx: null, claim: null, line: null, inOtherTx: false, orphan: false, npi: '', segNo: 0 };
+    for (const raw of splitSegments(ic.text, ic.delims)) {
+      ctx.segNo = ++segNo;
+      res.segments++;
+      try { handleSegment(ctx, raw); }
+      catch (err) { res.skipped++; log('skip', err.message, { segNo, raw }); }
+    }
+    if (ctx.tx) {
+      log('warn', `Interchange ended inside transaction ${ctx.tx.control || '?'} (no SE). Kept the claims read so far.`);
+      closeTx(ctx);
+    }
+  }
+  return res;
+}
+
+/** Delimiter-independent copy of a segment, so the same transaction is recognised
+ *  as a duplicate even if it was re-exported with different delimiters. */
+function fingerprintSegment(el, d) { return el.map((e) => e.split(d.component).join('\u0002')).join('\u0001'); }
+
+// Segments that start a new claim/loop and therefore end a skipped ("orphan") claim.
+const LOOP_BOUNDARIES = new Set(['LX', 'TS3', 'TS2', 'CLP', 'PLB']);
+
+function handleSegment(ctx, raw) {
+  const el = raw.split(ctx.d.element);
+  const id = el[0];
+  if (ctx.tx && id !== 'ST' && id !== 'SE') { ctx.tx.segCount++; ctx.tx.fingerprint.push(fingerprintSegment(el, ctx.d)); }
+  if (!/^[A-Z][A-Z0-9]{1,2}$/.test(id)) throw new Error('Not a valid segment ID; segment skipped.');
+  switch (id) {
+    case 'ISA':
+      ctx.res.interchanges++;
+      if ((el[15] || '').trim() === 'T') ctx.log('info', 'ISA15 = T: this interchange is flagged as test data.', { segNo: ctx.segNo });
+      return;
+    case 'GS':
+      ctx.res.groups++;
+      if (el[8] && !el[8].startsWith('005010')) ctx.log('warn', `GS08 version is ${el[8]}, not 005010X221A1; parsed anyway.`, { segNo: ctx.segNo });
+      return;
+    case 'GE': case 'IEA': return;
+    case 'ST': return startTx(ctx, el);
+    case 'SE': return endTx(ctx, el);
+  }
+  if (ctx.inOtherTx) return; // inside a non-835 transaction set: ignored as a whole
+  if (!ctx.tx) throw new Error(`${id} is outside an ST/SE transaction; segment skipped.`);
+  if (ctx.orphan && !LOOP_BOUNDARIES.has(id)) throw new Error(`${id} belongs to a claim that was skipped; segment skipped.`);
+  const handler = SEGMENT_HANDLERS[id];
+  if (!handler) { ctx.res.ignored[id] = (ctx.res.ignored[id] || 0) + 1; return; }
+  handler(ctx, el);
+}
+
+function startTx(ctx, el) {
+  if (ctx.tx) { ctx.log('warn', 'ST found before the previous SE; previous transaction closed.', { segNo: ctx.segNo }); closeTx(ctx); }
+  ctx.inOtherTx = false;
+  // Spec: only ST01 = 835 (claim payment/advice) is processed.
+  if (el[1] !== '835') {
+    ctx.inOtherTx = true;
+    ctx.res.otherTx++;
+    ctx.log('info', `Transaction set ${el[1] || '(blank)'} is not an 835; skipped.`, { segNo: ctx.segNo });
+    return;
+  }
+  ctx.tx = {
+    id: 'T' + (++seq), control: el[2] || '', fileName: ctx.res.fileName, segCount: 1, fingerprint: [fingerprintSegment(el, ctx.d)],
+    claims: [], plb: [], npis: new Set(), payerName: '', payeeName: '', payeeNpi: '', taxId: '', method: '', trace: '',
+    totalCents: null, paymentDay: null, productionDay: null, remitDay: null,
+  };
+  ctx.claim = null; ctx.line = null; ctx.orphan = false; ctx.npi = '';
+}
+
+function endTx(ctx, el) {
+  if (ctx.inOtherTx) { ctx.inOtherTx = false; return; }
+  if (!ctx.tx) throw new Error('SE without a matching ST; segment skipped.');
+  ctx.tx.segCount++;
+  ctx.tx.fingerprint.push(fingerprintSegment(el, ctx.d));
+  // X12: SE01 = number of segments from ST to SE inclusive.
+  if (String(+el[1]) !== String(ctx.tx.segCount)) {
+    ctx.log('warn', `SE01 says ${el[1] || '?'} segments but ${ctx.tx.segCount} were counted; the file may be truncated or edited.`, { segNo: ctx.segNo });
+  }
+  closeTx(ctx);
+}
+
+function closeClaim(ctx) {
+  const c = ctx.claim;
+  ctx.claim = null; ctx.line = null; ctx.orphan = false;
+  if (!c) return;
+  finalizeClaim(c, ctx);
+  ctx.tx.claims.push(c);
+}
+
+/** Flatten service-line data onto the claim record (one record per claim). */
+function finalizeClaim(c, ctx) {
+  const first = c.lines[0];
+  c.ndc11 = first ? first.ndc11 : '';
+  c.ndcRaw = first ? first.ndcRaw : '';
+  c.qty = first ? first.qty : null;
+  // MTF rule: DOS = DTM*472 on the service line.
+  // ASSUMPTION: fall back to a claim-level DTM*472, then the claim statement date DTM*232.
+  c.dosDay = first?.dosDay ?? c.claimDosDay ?? c.stmtDay ?? null;
+  c.rarcs = [...new Set([...c.rarcs, ...c.lines.flatMap((l) => l.rarcs)])];
+  c.cas = [...c.cas, ...c.lines.flatMap((l) => l.cas)];
+  const where = `Claim at segment ${c.segNo}`;
+  if (!c.lines.length) ctx.log('warn', `${where} has no SVC service line, so it has no NDC.`, { segNo: c.segNo });
+  // ASSUMPTION: pharmacy claims carry one drug; with several lines, NDC/qty/DOS come from the first.
+  if (c.lines.length > 1) ctx.log('warn', `${where} has ${c.lines.length} service lines; NDC, quantity and DOS are taken from the first.`, { segNo: c.segNo });
+  if (c.lines.length && c.lines.every((l) => l.sdraCents != null)) {
+    const lineSdra = c.lines.reduce((s, l) => s + l.sdraCents, 0);
+    if (lineSdra !== c.sdraCents) ctx.log('warn', `${where}: CLP03 SDRA ${fmtMoney(c.sdraCents)} differs from the SVC02 total ${fmtMoney(lineSdra)}. Claim-level CLP03 is used.`, { segNo: c.segNo });
+  }
+  if (c.lines.length && c.lines.every((l) => l.paidCents != null)) {
+    const linePaid = c.lines.reduce((s, l) => s + l.paidCents, 0);
+    if (linePaid !== c.paidCents) ctx.log('warn', `${where}: CLP04 paid ${fmtMoney(c.paidCents)} differs from the SVC03 total ${fmtMoney(linePaid)}. Claim-level CLP04 is used.`, { segNo: c.segNo });
+  }
+}
+
+function closeTx(ctx) {
+  closeClaim(ctx);
+  const tx = ctx.tx;
+  ctx.tx = null; ctx.npi = ''; ctx.orphan = false;
+  const where = `Transaction ${tx.control || tx.id}`;
+  // MTF rule (spec): remitDate = BPR16 payment date, falling back to DTM*405 production date.
+  tx.remitDay = tx.paymentDay ?? tx.productionDay ?? null;
+  if (tx.paymentDay == null && tx.productionDay != null) ctx.log('warn', `${where}: no valid BPR16 payment date; used the DTM*405 production date as the remit date.`);
+  if (tx.remitDay == null) ctx.log('warn', `${where}: no BPR16 or DTM*405 date, so dispute deadlines cannot be computed for its claims.`);
+  if (!tx.payerName) ctx.log('warn', `${where}: no N1*PR payer name.`);
+  // X12 balancing: BPR02 = sum of CLP04 minus sum of PLB amounts.
+  const claimPaid = tx.claims.reduce((s, c) => s + c.paidCents, 0);
+  const plbTotal = tx.plb.reduce((s, p) => s + p.amountCents, 0);
+  tx.expectedCents = claimPaid - plbTotal;
+  tx.balanced = tx.totalCents != null && tx.totalCents === tx.expectedCents;
+  if (tx.totalCents == null) ctx.log('warn', `${where}: no readable BPR02 total.`);
+  else if (!tx.balanced) ctx.log('warn', `${where}: BPR02 ${fmtMoney(tx.totalCents)} does not equal claim payments ${fmtMoney(claimPaid)} minus PLB ${fmtMoney(plbTotal)}. A claim may be missing or skipped.`);
+  tx.key = hashString(tx.fingerprint.join('\n'));
+  tx.fingerprint = null;
+  tx.npi = [...tx.npis].join(', ');
+  for (const c of tx.claims) Object.assign(c, { txId: tx.id, fileName: tx.fileName, payerName: tx.payerName, remitDay: tx.remitDay });
+  for (const p of tx.plb) Object.assign(p, { txId: tx.id, fileName: tx.fileName, payerName: tx.payerName, remitDay: tx.remitDay });
+  ctx.res.transactions.push(tx);
+}
+
+/** One handler per segment the audit needs. Handlers throw on malformed input;
+ *  the caller skips and logs the segment. Segments without a handler are ignored. */
+const SEGMENT_HANDLERS = {
+  // MTF: BPR02 = total paid in this remittance; BPR04 = ACH or CHK; BPR16 = payment date (remitDate).
+  BPR(ctx, el) {
+    const totalCents = requireCents(el[2], 'BPR02 total paid');
+    const paymentDay = x12DateToDay(el[16]);
+    if (el[16] && paymentDay == null) ctx.log('warn', 'BPR16 is not a valid CCYYMMDD date.', { segNo: ctx.segNo });
+    Object.assign(ctx.tx, { totalCents, paymentDay, method: (el[4] || '').trim() });
+  },
+  // MTF: TRN02 = check / EFT trace number.
+  TRN(ctx, el) { ctx.tx.trace = el[2] || ''; },
+  DTM(ctx, el) {
+    const q = el[1], day = x12DateToDay(el[2]);
+    if (day == null) throw new Error(`DTM*${q || '?'} date is not a valid CCYYMMDD date; segment skipped.`);
+    if (ctx.line) { if (q === '472') ctx.line.dosDay = day; }      // MTF: service-line DTM*472 = date of service
+    else if (ctx.claim) {
+      if (q === '472') ctx.claim.claimDosDay = day;
+      else if (q === '232') ctx.claim.stmtDay = day;
+    } else if (q === '405') ctx.tx.productionDay = day;            // MTF: header DTM*405 = production date
+  },
+  N1(ctx, el) {
+    // MTF: N1*PR payer may be the MTF itself or the manufacturer; kept exactly as sent.
+    if (el[1] === 'PR') ctx.tx.payerName = (el[2] || '').trim();
+    else if (el[1] === 'PE') {
+      ctx.tx.payeeName = (el[2] || '').trim();
+      if (el[3] === 'XX' && el[4]) ctx.tx.payeeNpi = el[4];
+    }
+  },
+  REF(ctx, el) {
+    if (el[1] === 'F8') {
+      // MTF: REF*F8 = original ICN on reversals and corrections.
+      if (!ctx.claim) throw new Error('REF*F8 is outside a claim; segment skipped.');
+      ctx.claim.originalIcn = (el[2] || '').trim();
+    } else if (el[1] === 'EV' && !ctx.claim) {
+      ctx.tx.taxId = (el[2] || '').trim(); // MTF: REF*EV = pharmacy tax ID (only the last 4 are ever shown)
+    }
+  },
+  // MTF: Loop 2000 LX01 = pharmacy NPI; TS301 (if present) also carries the NPI and wins.
+  LX(ctx, el) {
+    closeClaim(ctx);
+    const v = (el[1] || '').trim();
+    ctx.npi = /^\d{10}$/.test(v) ? v : ''; // ASSUMPTION: an LX01 that is not 10 digits is a sequence number, not an NPI
+    if (ctx.npi) ctx.tx.npis.add(ctx.npi);
+  },
+  TS3(ctx, el) {
+    const v = (el[1] || '').trim();
+    if (v) { ctx.npi = v; ctx.tx.npis.add(v); }
+  },
+  CLP(ctx, el) {
+    closeClaim(ctx);
+    const clp01 = (el[1] || '').trim();
+    let sdraCents, paidCents;
+    try {
+      if (!clp01) throw new Error('CLP01 (Rx + FILL + fill number) is empty');
+      sdraCents = requireCents(el[3], 'CLP03 SDRA');
+      paidCents = requireCents(el[4], 'CLP04 paid');
+    } catch (err) {
+      ctx.orphan = true; // its NM1/SVC/CAS/LQ segments are skipped too, so they cannot attach to another claim
+      throw new Error(`${err.message.replace(/; segment skipped\.$/, '')}; whole claim skipped.`);
+    }
+    // MTF: CLP01 = Rx number + "FILL" + fill number, e.g. 1234567FILL02.
+    const cut = clp01.toUpperCase().lastIndexOf('FILL');
+    ctx.claim = {
+      id: 'C' + (++seq), ord: seq, segNo: ctx.segNo, clp01,
+      // ASSUMPTION: without "FILL", the whole CLP01 is the Rx number and the fill is blank.
+      rxNumber: cut > 0 ? clp01.slice(0, cut) : clp01,
+      fillNumber: cut > 0 ? clp01.slice(cut + 4) : '',
+      status: (el[2] || '').trim(),           // MTF: CLP02 1 = processed, 22 = reversal
+      sdraCents,                              // MTF: CLP03 = Standard Default Refund Amount (expected refund)
+      paidCents,                              // MTF: CLP04 = manufacturer payment amount
+      icn: (el[7] || '').trim(),              // MTF: CLP07 = MTF internal claim number (ICN)
+      originalIcn: '', npi: ctx.npi, patient: null,
+      lines: [], rarcs: [], cas: [], claimDosDay: null, stmtDay: null,
+    };
+  },
+  // MTF: NM1*QC = patient name (PHI; hidden in privacy mode, never exported).
+  NM1(ctx, el) {
+    if (el[1] !== 'QC') return;
+    if (!ctx.claim) throw new Error('NM1*QC is outside a claim; segment skipped.');
+    ctx.claim.patient = { last: (el[3] || '').trim(), first: (el[4] || '').trim(), middle: (el[5] || '').trim() };
+  },
+  // MTF: SVC01 = N4:<NDC-11>; SVC02 = SDRA; SVC03 = paid; SVC05 = quantity.
+  SVC(ctx, el) {
+    if (!ctx.claim) throw new Error('SVC is outside a claim; segment skipped.');
+    const parts = (el[1] || '').split(ctx.d.component);
+    const qualifier = (parts[0] || '').trim();
+    const ndcRaw = (parts[1] || '').trim();
+    const line = {
+      qualifier, ndcRaw, ndc11: normalizeNdc(ndcRaw),
+      sdraCents: optionalCents(el[2], 'SVC02 SDRA'),
+      paidCents: optionalCents(el[3], 'SVC03 paid'),
+      qty: parseQty(el[5], 'SVC05 quantity'),
+      dosDay: null, cas: [], rarcs: [],
+    };
+    if (qualifier !== 'N4') ctx.log('warn', `SVC01 qualifier is "${qualifier}", expected N4 (NDC).`, { segNo: ctx.segNo });
+    if (!line.ndc11) ctx.log('warn', 'SVC01 does not hold an 11-digit NDC; labeler cannot be derived.', { segNo: ctx.segNo });
+    ctx.claim.lines.push(line);
+    ctx.line = line;
+  },
+  // MTF: CAS = group code (MTF uses PI) then up to six reason/amount/quantity triplets (MTF uses 307).
+  CAS(ctx, el) {
+    const target = ctx.line || ctx.claim;
+    if (!target) throw new Error('CAS is outside a claim; segment skipped.');
+    const group = (el[1] || '').trim();
+    if (!group) throw new Error('CAS01 group code is empty; segment skipped.');
+    const adjustments = [];
+    for (let i = 2; i <= 17; i += 3) {
+      const reason = (el[i] || '').trim();
+      if (!reason) continue;
+      adjustments.push({
+        group, reason,
+        amountCents: requireCents(el[i + 1], `CAS${String(i + 1).padStart(2, '0')} amount`),
+        qty: parseQty(el[i + 2], `CAS${String(i + 2).padStart(2, '0')} quantity`),
+      });
+    }
+    if (!adjustments.length) throw new Error('CAS has no reason code; segment skipped.');
+    target.cas.push(...adjustments);
+  },
+  // MTF: LQ*HE = remark code (RARC), e.g. N907.
+  LQ(ctx, el) {
+    if (el[1] !== 'HE') return;
+    const target = ctx.line || ctx.claim;
+    if (!target) throw new Error('LQ*HE is outside a claim; segment skipped.');
+    const code = (el[2] || '').trim().toUpperCase();
+    if (!code) throw new Error('LQ02 remark code is empty; segment skipped.');
+    target.rarcs.push(code);
+  },
+  // MTF: PLB01 = NPI (positions 1-10) + drug ID; PLB02 = date; then pairs of
+  // (reason code before the component separator, e.g. WO or FB; amount).
+  PLB(ctx, el) {
+    closeClaim(ctx);
+    const provider = (el[1] || '').trim();
+    const items = [];
+    for (let i = 3; i < el.length; i += 2) {
+      if (!(el[i] || '').trim()) continue;
+      const [reason, ...ref] = el[i].split(ctx.d.component);
+      items.push({
+        reason: reason.trim().toUpperCase(), reference: ref.join(ctx.d.component).trim(),
+        amountCents: requireCents(el[i + 1], `PLB${String(i + 1).padStart(2, '0')} amount`),
+      });
+    }
+    if (!items.length) throw new Error('PLB has no adjustment reason/amount pairs; segment skipped.');
+    for (const item of items) {
+      ctx.tx.plb.push({ id: 'P' + (++seq), npi: provider.slice(0, 10), drugId: provider.slice(10), periodDay: x12DateToDay(el[2]), periodRaw: el[2] || '', ...item });
+    }
+  },
+};
+
+/* ---------- 5. Loading files into state ---------- */
+
+/** Parse one file's text and merge its transactions into state. Returns new claim count. */
+function ingest(text, fileName) {
+  const r = parse835(text, fileName);
+  let added = 0, duplicates = 0, claims = 0;
+  for (const tx of r.transactions) {
+    // ASSUMPTION: a transaction identical to one already loaded (same file twice) is skipped, not double counted.
+    if (state.txKeys.has(tx.key)) {
+      duplicates++;
+      r.log.push({ level: 'warn', file: fileName, msg: `Transaction ${tx.control} (trace ${tx.trace || '?'}) is identical to one already loaded; skipped to avoid double counting.` });
+      continue;
+    }
+    state.txKeys.add(tx.key);
+    state.transactions.push(tx);
+    for (const c of tx.claims) state.claims.push(c);
+    for (const p of tx.plb) state.plb.push(p);
+    claims += tx.claims.length;
+    added++;
+  }
+  for (const entry of r.log) state.log.push(entry);
+  state.files.push({ name: fileName, interchanges: r.interchanges, transactions: added, duplicates, otherTx: r.otherTx, claims, segments: r.segments, skipped: r.skipped, ignored: r.ignored });
+  return claims;
+}
+
+async function loadFiles(files) {
+  if (!files.length) return;
+  setStatus(`Reading ${plural(files.length, 'file')}…`);
+  let claims = 0;
+  for (const file of files) {
+    let text;
+    try { text = await file.text(); }
+    catch (err) {
+      state.log.push({ level: 'error', file: file.name, msg: `Could not read this file (${err.message}).` });
+      state.files.push({ name: file.name, interchanges: 0, transactions: 0, duplicates: 0, otherTx: 0, claims: 0, segments: 0, skipped: 0, ignored: {} });
+      continue;
+    }
+    claims += ingest(text, file.name);
+  }
+  renderAll();
+  setStatus(`Read ${plural(files.length, 'file')}: ${plural(claims, 'new claim')}. Details are in the parse log.`);
+}
+
+function clearAll() {
+  Object.assign(state, {
+    files: [], transactions: [], claims: [], plb: [], log: [], txKeys: new Set(), derived: [], selfTests: null,
+    sort: { key: 'daysLeft', dir: 'asc' }, filters: { view: 'action', category: '', status: '', payer: '', search: '' },
+    queueLimit: CONFIG.queuePageSize,
+  });
+  $('fileInput').value = '';
+  $('fSearch').value = '';
+  $('fView').value = 'action';
+  $('logDetails').open = false;
+  renderAll();
+  setStatus('All data cleared from memory.');
+}
+
+function setStatus(text) { $('status').textContent = text; }
+
+/* ---------- 6. Classification and dispute clock ---------- */
+
+/** Category key for one claim, following the spec's order:
+ *  RARC N907–N911 → reversal → (other RARC) → unexplained short-pay → OK. */
+function classify(c) {
+  for (const code of Object.keys(CONFIG.rarcCategories)) if (c.rarcs.includes(code)) return code;
+  if (c.status === CONFIG.reversalStatus) return 'REVERSAL';
+  if (c.paidCents < c.sdraCents) return c.rarcs.length ? 'OTHER_RARC' : 'SHORT_PAY';
+  return 'OK';
+}
+
+/** MTF rule (spec): GFI deadline = remit date + 120 days. daysLeft is counted on
+ *  UTC-midnight day numbers, so there is no off-by-one from time zones or DST. */
+function computeDeadlines(remitDay, today) {
+  if (remitDay == null) return { gfiDeadlineDay: null, daysLeft: null, clock: 'No date' }; // ASSUMPTION: no date = shown, never "Expired"
+  const gfiDeadlineDay = remitDay + CONFIG.gfiWindowDays;
+  const daysLeft = gfiDeadlineDay - today;
+  const clock = daysLeft < 0 ? 'Expired' : daysLeft <= CONFIG.urgentDays ? 'Urgent' : 'Open';
+  return { gfiDeadlineDay, daysLeft, clock };
+}
+
+/** Add gap, category, deadline, 340B and reversal-link fields to each claim. */
+function deriveClaims(claims, { today, no340B }) {
+  const referencedBy = new Map();
+  for (const c of claims) {
+    if (!c.originalIcn) continue;
+    if (!referencedBy.has(c.originalIcn)) referencedBy.set(c.originalIcn, []);
+    referencedBy.get(c.originalIcn).push(c.icn || '(no ICN)');
+  }
+  return claims.map((c) => {
+    const category = classify(c);
+    const clock = computeDeadlines(c.remitDay, today);
+    return {
+      ...c, ...clock, category,
+      gapCents: Math.max(c.sdraCents - c.paidCents, 0),       // spec: gap = max(SDRA - paid, 0)
+      overpaidCents: Math.max(c.paidCents - c.sdraCents, 0),  // overpayments tracked separately
+      payer: c.payerName || '(no payer name)',
+      // Spec: with no 340B contract pharmacy, every N907 claim still inside the window is a strong candidate.
+      strong: no340B && category === 'N907' && clock.daysLeft != null && clock.daysLeft >= 0,
+      referencedBy: (c.icn && referencedBy.get(c.icn)) || [],
+    };
+  });
+}
+
+/** Spec sort: daysLeft ascending (no date last), then gap descending. */
+function defaultOrder(a, b) {
+  const da = a.daysLeft ?? Infinity, db = b.daysLeft ?? Infinity;
+  return (da - db) || (b.gapCents - a.gapCents) || (a.ord - b.ord);
+}
+
+function needsAction(c) { return c.gapCents > 0 || c.category !== 'OK'; }
+
+function summarize(dc) {
+  const s = { claims: dc.length, sdra: 0, paid: 0, gap: 0, openGap: 0, expiredGap: 0, noDateGap: 0, urgentCount: 0, urgentGap: 0, overpaid: 0, overpaidCount: 0 };
+  for (const c of dc) {
+    s.sdra += c.sdraCents; s.paid += c.paidCents; s.gap += c.gapCents;
+    if (c.overpaidCents > 0) { s.overpaid += c.overpaidCents; s.overpaidCount++; }
+    if (c.gapCents <= 0) continue;
+    if (c.daysLeft == null) s.noDateGap += c.gapCents;
+    else if (c.daysLeft < 0) s.expiredGap += c.gapCents;
+    else {
+      s.openGap += c.gapCents;
+      if (c.clock === 'Urgent') { s.urgentCount++; s.urgentGap += c.gapCents; } // ASSUMPTION: urgent count = urgent claims with a gap
+    }
+  }
+  return s;
+}
+
+function breakdown(dc, keyFn) {
+  const groups = new Map();
+  for (const c of dc) {
+    const key = keyFn(c);
+    let g = groups.get(key);
+    if (!g) groups.set(key, (g = { key, count: 0, sdra: 0, paid: 0, gap: 0, overpaid: 0 }));
+    g.count++; g.sdra += c.sdraCents; g.paid += c.paidCents; g.gap += c.gapCents; g.overpaid += c.overpaidCents;
+  }
+  return [...groups.values()].sort((a, b) => b.gap - a.gap || b.count - a.count || String(a.key).localeCompare(String(b.key)));
+}
+function categoryBreakdown(dc) {
+  return breakdown(dc, (c) => c.category).sort((a, b) => CATEGORY_ORDER.indexOf(a.key) - CATEGORY_ORDER.indexOf(b.key));
+}
+
+function shortLabel(category) {
+  const text = CATEGORY_LABELS[category] || category;
+  const head = text.split(':')[0];
+  return category in CONFIG.rarcCategories ? `${category} · ${head}` : head;
+}
+/** Guidance after the colon, e.g. "dispute if the pharmacy has no 340B …" (blank for "OK"). */
+function guidance(category) {
+  const text = CATEGORY_LABELS[category] || '';
+  const i = text.indexOf(':');
+  return i === -1 ? '' : text.slice(i + 1).trim();
+}
+function fullLabel(category) {
+  const text = CATEGORY_LABELS[category] || category;
+  return category in CONFIG.rarcCategories ? `${category}: ${text}` : text;
+}
+
+function suggestedReason(c) {
+  const parts = [fullLabel(c.category)];
+  if (c.strong) parts.push(`${CONFIG.strongCandidateLabel}: pharmacy reports it has no 340B contract-pharmacy agreements`);
+  if (c.referencedBy.length) parts.push(`Check first: claim(s) ${c.referencedBy.join(', ')} reference this ICN in REF*F8 (reversal/correction)`);
+  parts.push(`SDRA ${fmtMoney(c.sdraCents)}, paid ${fmtMoney(c.paidCents)}, unpaid ${fmtMoney(c.gapCents)}`);
+  return parts.join('. ') + '.';
+}
+
+/* ---------- 7. Rendering ---------- */
+const CLOCK_STYLE = {
+  Expired: 'bg-slate-200 text-slate-700', Urgent: 'bg-red-100 text-red-800',
+  Open: 'bg-emerald-100 text-emerald-800', 'No date': 'bg-amber-100 text-amber-900',
+};
+const CATEGORY_STYLE = {
+  N907: 'bg-violet-100 text-violet-800', N908: 'bg-sky-100 text-sky-800', N909: 'bg-indigo-100 text-indigo-800',
+  N910: 'bg-amber-100 text-amber-900', N911: 'bg-orange-100 text-orange-900', REVERSAL: 'bg-slate-200 text-slate-700',
+  OTHER_RARC: 'bg-yellow-100 text-yellow-900', SHORT_PAY: 'bg-rose-100 text-rose-800', OK: 'bg-emerald-100 text-emerald-800',
+};
+const LEVEL_STYLE = { error: 'text-red-700', warn: 'text-amber-800', skip: 'text-orange-800', info: 'text-slate-500' };
+const BADGE = 'inline-block whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold';
+const TH_BASE = 'sticky top-0 bg-slate-100 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600';
+const TH = TH_BASE + ' px-3';
+
+function renderAll() {
+  state.derived = deriveClaims(state.claims, { today: localToday(), no340B: state.no340B });
+  renderLog();
+  const hasData = state.transactions.length > 0;
+  $('results').hidden = !hasData;
+  $('emptyState').hidden = hasData;
+  if (!hasData) return;
+  const dc = state.derived;
+  renderCards(summarize(dc));
+  renderBreakdowns(dc);
+  renderQueue();
+  renderLedger();
+  renderPayments();
+  $('gfiBtn').disabled = !dc.some((c) => c.gapCents > 0 && c.daysLeft != null && c.daysLeft >= 0);
+  $('deidBtn').disabled = !dc.length;
+  $('printBtn').disabled = !dc.length;
+}
+
+function renderLog() {
+  const files = state.files;
+  const skipped = files.reduce((s, f) => s + f.skipped, 0);
+  const dups = files.reduce((s, f) => s + f.duplicates, 0);
+  const tests = state.selfTests;
+  const passed = tests ? tests.filter((t) => t.pass).length : 0;
+  $('logSummary').textContent = files.length
+    ? `· ${plural(files.length, 'file')} · ${plural(state.transactions.length, 'transaction')} · ${plural(state.claims.length, 'claim')} · ${plural(skipped, 'skipped segment')}`
+      + (dups ? ` · ${plural(dups, 'duplicate transaction')} ignored` : '')
+      + (tests ? ` · self-tests ${passed}/${tests.length} passed` : '')
+    : 'nothing loaded';
+  const html = [];
+  if (tests) {
+    html.push(`<div class="mb-3"><div class="font-semibold ${passed === tests.length ? 'text-emerald-700' : 'text-red-700'}">Self-tests: ${passed}/${tests.length} passed</div><ul>`
+      + tests.map((t) => `<li class="${t.pass ? 'text-emerald-700' : 'text-red-700'}">${t.pass ? '✔ PASS' : '✘ FAIL'} · ${esc(t.name)}${t.detail ? ` <span class="text-slate-600">(${esc(t.detail)})</span>` : ''}</li>`).join('')
+      + '</ul></div>');
+  }
+  if (files.length) {
+    html.push('<div class="mb-3"><div class="font-semibold">Files</div><ul>' + files.map((f) => {
+      const ignored = Object.entries(f.ignored).map(([id, n]) => `${id}×${n}`).join(' ');
+      return `<li>${esc(f.name)}: ${plural(f.interchanges, 'interchange')}, ${plural(f.transactions, 'transaction')}, ${plural(f.claims, 'claim')}, ${plural(f.skipped, 'skipped segment')}`
+        + (f.duplicates ? `, ${plural(f.duplicates, 'duplicate transaction')} ignored` : '')
+        + (f.otherTx ? `, ${plural(f.otherTx, 'non-835 transaction')} skipped` : '')
+        + (ignored ? `<div class="ml-4 text-slate-500">Segments not needed for this audit: ${esc(ignored)}</div>` : '') + '</li>';
+    }).join('') + '</ul></div>');
+  }
+  if (state.log.length) {
+    const shown = state.log.slice(0, 1000);
+    html.push('<div><div class="font-semibold">Messages</div><ul>' + shown.map((e) =>
+      `<li class="${LEVEL_STYLE[e.level] || ''}"><span class="font-semibold uppercase">${esc(e.level)}</span> ${esc(e.file)}${e.segNo ? ` · segment ${e.segNo}` : ''}: ${esc(e.msg)}`
+      + (e.raw != null ? `<div class="ml-4 break-all text-slate-500">${state.privacy ? '[segment text hidden in privacy mode]' : esc(e.raw)}</div>` : '')
+      + '</li>').join('') + '</ul>'
+      + (state.log.length > shown.length ? `<p class="text-slate-500">…and ${state.log.length - shown.length} more messages.</p>` : '') + '</div>');
+  }
+  $('logBody').innerHTML = html.join('') || '<p class="text-slate-500">Nothing loaded yet.</p>';
+}
+
+function renderCards(s) {
+  const card = (label, value, sub, tone = '') => `
+    <div class="card min-w-0 rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+      <div class="text-xs font-medium uppercase tracking-wide text-slate-500">${label}</div>
+      <div class="mt-1 break-words text-lg font-semibold tabular-nums sm:text-2xl ${tone}">${value}</div>
+      <div class="mt-1 text-xs text-slate-500">${sub}</div>
+    </div>`;
+  $('cards').innerHTML = [
+    card('Claims', s.claims.toLocaleString('en-US'), `${plural(state.transactions.length, 'payment')} · ${plural(state.files.length, 'file')}`),
+    card('Total SDRA', fmtMoney(s.sdra), 'Expected refunds (CLP03)'),
+    card('Total paid', fmtMoney(s.paid), 'Manufacturer payments (CLP04)'),
+    card('Total gap', fmtMoney(s.gap), 'Sum of max(SDRA − paid, 0)' + (s.noDateGap ? ` · ${fmtMoney(s.noDateGap)} has no remit date` : '')),
+    card('Open-window gap', fmtMoney(s.openGap), `Deadline not passed (≤ ${CONFIG.gfiWindowDays} days)`, 'text-emerald-700'),
+    card('Expired gap', fmtMoney(s.expiredGap), `Past the ${CONFIG.gfiWindowDays}-day window`, 'text-slate-500'),
+    card('Urgent', s.urgentCount.toLocaleString('en-US'), `${fmtMoney(s.urgentGap)} gap due within ${CONFIG.urgentDays} days`, s.urgentCount ? 'text-red-700' : ''),
+    card('Overpayments', fmtMoney(s.overpaid), `${plural(s.overpaidCount, 'claim')} paid above SDRA (not in gap)`),
+  ].join('');
+}
+
+function breakdownCard(title, keyHeader, rows, fmtKey = esc, scroll = true) {
+  const total = rows.reduce((t, r) => ({ count: t.count + r.count, sdra: t.sdra + r.sdra, paid: t.paid + r.paid, gap: t.gap + r.gap }), { count: 0, sdra: 0, paid: 0, gap: 0 });
+  const body = rows.map((r) => `<tr class="border-t border-slate-100">
+      <td class="px-3 py-1.5">${fmtKey(r.key)}</td><td class="num px-3 py-1.5">${r.count.toLocaleString('en-US')}</td>
+      <td class="num px-3 py-1.5">${fmtMoney(r.sdra)}</td><td class="num px-3 py-1.5">${fmtMoney(r.paid)}</td>
+      <td class="num px-3 py-1.5 font-semibold">${fmtMoney(r.gap)}</td></tr>`).join('');
+  return `<div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <h3 class="border-b border-slate-100 px-4 py-2 font-semibold">${esc(title)} <span class="text-xs font-normal text-slate-500">(${rows.length})</span></h3>
+    <div class="scroll-box ${scroll ? 'max-h-80' : ''} overflow-auto">
+      <table class="min-w-full text-sm">
+        <thead><tr><th class="${TH}">${esc(keyHeader)}</th><th class="${TH} num">Claims</th><th class="${TH} num">SDRA</th><th class="${TH} num">Paid</th><th class="${TH} num">Gap</th></tr></thead>
+        <tbody>${body}</tbody>
+        <tfoot><tr class="border-t-2 border-slate-300 font-semibold"><td class="px-3 py-1.5">Total</td><td class="num px-3 py-1.5">${total.count.toLocaleString('en-US')}</td>
+          <td class="num px-3 py-1.5">${fmtMoney(total.sdra)}</td><td class="num px-3 py-1.5">${fmtMoney(total.paid)}</td><td class="num px-3 py-1.5">${fmtMoney(total.gap)}</td></tr></tfoot>
+      </table>
+    </div></div>`;
+}
+
+function renderBreakdowns(dc) {
+  $('bdCategory').innerHTML = breakdownCard('By category', 'Category', categoryBreakdown(dc),
+    (k) => `<span class="${BADGE} ${CATEGORY_STYLE[k] || 'bg-slate-100 text-slate-800'}">${esc(shortLabel(k))}</span>`
+      + (guidance(k) ? `<div class="mt-0.5 min-w-[14rem] text-xs text-slate-500">${esc(guidance(k))}</div>` : ''), false);
+  $('bdPayer').innerHTML = breakdownCard('By payer (N1*PR)', 'Payer', breakdown(dc, (c) => c.payer));
+  $('bdLabeler').innerHTML = breakdownCard('By labeler (first 5 digits of NDC)', 'Labeler', breakdown(dc, labelerKey), (k) => `<span class="whitespace-nowrap font-mono">${esc(k)}</span>`);
+  $('bdNdc').innerHTML = breakdownCard('By NDC', 'NDC-11', breakdown(dc, ndcKey), (k) => `<span class="whitespace-nowrap font-mono">${esc(k)}</span>`);
+}
+
+const QUEUE_COLUMNS = [
+  { key: 'daysLeft', label: 'Days left', num: true, value: (c) => c.daysLeft },
+  { key: 'remitDay', label: 'Remit date', value: (c) => c.remitDay },
+  { key: 'dosDay', label: 'DOS', value: (c) => c.dosDay },
+  { key: 'rxNumber', label: 'Rx', value: (c) => c.rxNumber },
+  { key: 'fillNumber', label: 'Fill', value: (c) => c.fillNumber },
+  { key: 'patient', label: 'Patient', phi: true, value: (c) => patientName(c) },
+  { key: 'ndc', label: 'NDC', value: (c) => c.ndc11 || c.ndcRaw },
+  { key: 'qty', label: 'Qty', num: true, value: (c) => c.qty },
+  { key: 'sdraCents', label: 'SDRA', num: true, value: (c) => c.sdraCents },
+  { key: 'paidCents', label: 'Paid', num: true, value: (c) => c.paidCents },
+  { key: 'gapCents', label: 'Gap', num: true, value: (c) => c.gapCents },
+  { key: 'rarc', label: 'RARC', value: (c) => c.rarcs.join(' ') },
+  { key: 'category', label: 'Category', value: (c) => CATEGORY_ORDER.indexOf(c.category) },
+  { key: 'icn', label: 'ICN', value: (c) => c.icn },
+];
+
+function compareBy(column, dir) {
+  return (a, b) => {
+    const va = column.value(a), vb = column.value(b);
+    const emptyA = va == null || va === '', emptyB = vb == null || vb === '';
+    if (emptyA !== emptyB) return emptyA ? 1 : -1; // blanks always last
+    let r = 0;
+    if (!emptyA) r = typeof va === 'number' && typeof vb === 'number' ? va - vb : String(va).localeCompare(String(vb), 'en', { numeric: true });
+    return (dir === 'desc' ? -r : r) || defaultOrder(a, b);
+  };
+}
+
+function setOptions(select, options, current) {
+  const values = options.map(([v]) => v);
+  const value = values.includes(current) ? current : '';
+  select.innerHTML = options.map(([v, label]) => `<option value="${esc(v)}">${esc(label)}</option>`).join('');
+  select.value = value;
+  return value;
+}
+
+function searchText(c) {
+  return [c.clp01, c.rxNumber, c.fillNumber, c.icn, c.originalIcn, c.ndc11, fmtNdc(c.ndc11, c.ndcRaw), c.ndcRaw,
+    c.rarcs.join(' '), CATEGORY_LABELS[c.category], c.payer, state.privacy ? '' : patientName(c)].join(' ').toLowerCase();
+}
+
+function renderQueue() {
+  const dc = state.derived, f = state.filters;
+  f.category = setOptions($('fCategory'), [['', 'All categories'], ...CATEGORY_ORDER.filter((k) => dc.some((c) => c.category === k)).map((k) => [k, shortLabel(k)])], f.category);
+  f.status = setOptions($('fStatus'), [['', 'All statuses'], ...CLOCK_ORDER.filter((k) => dc.some((c) => c.clock === k)).map((k) => [k, k])], f.status);
+  f.payer = setOptions($('fPayer'), [['', 'All payers'], ...[...new Set(dc.map((c) => c.payer))].sort().map((p) => [p, p])], f.payer);
+
+  const q = f.search.trim().toLowerCase();
+  const rows = dc.filter((c) => (f.view === 'all' || needsAction(c))
+    && (!f.category || c.category === f.category)
+    && (!f.status || c.clock === f.status)
+    && (!f.payer || c.payer === f.payer)
+    && (!q || searchText(c).includes(q)));
+  const column = QUEUE_COLUMNS.find((col) => col.key === state.sort.key) || QUEUE_COLUMNS[0];
+  rows.sort(compareBy(column, state.sort.dir));
+
+  const columns = QUEUE_COLUMNS.filter((col) => !col.phi || !state.privacy);
+  $('queueHead').innerHTML = '<tr>' + columns.map((col) => {
+    const active = col.key === state.sort.key;
+    const aria = active ? (state.sort.dir === 'asc' ? 'ascending' : 'descending') : 'none';
+    return `<th class="${TH_BASE} px-2.5 ${col.num ? 'num' : ''}" aria-sort="${aria}"><button type="button" data-sort="${col.key}" class="inline-flex items-center gap-1 whitespace-nowrap uppercase hover:text-slate-900">${esc(col.label)}<span aria-hidden="true">${active ? (state.sort.dir === 'asc' ? '▲' : '▼') : ''}</span></button></th>`;
+  }).join('') + '</tr>';
+
+  const shown = rows.slice(0, state.queueLimit);
+  $('queueBody').innerHTML = shown.length
+    ? shown.map((c) => queueRow(c)).join('')
+    : `<tr><td colspan="${columns.length}" class="px-3 py-6 text-center text-slate-500">No claims match these filters.</td></tr>`;
+  $('queueCount').textContent = `Showing ${shown.length.toLocaleString('en-US')} of ${rows.length.toLocaleString('en-US')} matching claims (${dc.length.toLocaleString('en-US')} loaded)`;
+  const more = $('queueMore');
+  more.hidden = rows.length <= shown.length;
+  more.textContent = `Show ${Math.min(CONFIG.queuePageSize, rows.length - shown.length)} more`;
+}
+
+function queueRow(c) {
+  const td = (html, cls = '') => `<td class="px-2.5 py-2 ${cls}">${html}</td>`;
+  const deadline = c.gfiDeadlineDay == null ? 'No remit date' : `GFI deadline ${dayToIso(c.gfiDeadlineDay)}`;
+  const clock = `<span class="${BADGE} ${CLOCK_STYLE[c.clock]}" title="${esc(deadline)}">${c.daysLeft == null ? '—' : c.daysLeft} · ${esc(c.clock)}</span>`;
+  // The RARC column already shows the code, so the badge carries the plain-English head.
+  const category = `<span class="inline-block rounded-lg px-2 py-0.5 text-xs font-semibold ${CATEGORY_STYLE[c.category] || 'bg-slate-100 text-slate-800'}" title="${esc(fullLabel(c.category))}">${esc((CATEGORY_LABELS[c.category] || c.category).split(':')[0])}</span>`
+    + (c.strong ? `<div class="mt-1"><span class="${BADGE} bg-violet-700 text-white">${esc(CONFIG.strongCandidateLabel)}</span></div>` : '')
+    + (c.referencedBy.length ? `<div class="mt-1 text-xs text-slate-500">Referenced by ${esc(c.referencedBy.join(', '))} (REF*F8)</div>` : '');
+  const icn = esc(c.icn) + (c.originalIcn ? `<div class="text-slate-500">orig. ${esc(c.originalIcn)}</div>` : '');
+  return `<tr class="border-t border-slate-100 align-top hover:bg-slate-50">`
+    + td(clock, 'nowrap')
+    + td(esc(dayToIso(c.remitDay)), 'nowrap')
+    + td(esc(dayToIso(c.dosDay)), 'nowrap')
+    + td(esc(state.privacy ? maskTail(c.rxNumber) : c.rxNumber), 'nowrap font-mono')
+    + td(esc(c.fillNumber), 'nowrap')
+    + (state.privacy ? '' : td(esc(patientName(c)), 'nowrap'))
+    + td(esc(fmtNdc(c.ndc11, c.ndcRaw)), 'nowrap font-mono')
+    + td(c.qty == null ? '' : esc(c.qty), 'num')
+    + td(fmtMoney(c.sdraCents), 'num')
+    + td(fmtMoney(c.paidCents), 'num')
+    + td(fmtMoney(c.gapCents), 'num font-semibold')
+    + td(esc(c.rarcs.join(', ')), 'nowrap')
+    + td(category, 'min-w-[9rem] max-w-[13rem]')
+    + td(icn, 'nowrap font-mono text-xs')
+    + '</tr>';
+}
+
+function simpleTable(headers, rowsHtml, footHtml = '') {
+  return `<div class="overflow-x-auto rounded-xl border border-slate-200 bg-white"><table class="min-w-full text-sm">
+    <thead><tr>${headers.map(([label, num]) => `<th class="${TH} ${num ? 'num' : ''}">${esc(label)}</th>`).join('')}</tr></thead>
+    <tbody>${rowsHtml}</tbody>${footHtml}</table></div>`;
+}
+
+function renderLedger() {
+  const rows = [...state.plb].sort((a, b) => (a.remitDay ?? Infinity) - (b.remitDay ?? Infinity) || a.reason.localeCompare(b.reason));
+  if (!rows.length) { $('ledger').innerHTML = '<p class="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-500">No PLB provider adjustments in the loaded files.</p>'; return; }
+  const td = (html, cls = '') => `<td class="px-3 py-1.5 ${cls}">${html}</td>`;
+  const body = rows.map((p) => '<tr class="border-t border-slate-100">'
+    + td(esc(dayToIso(p.remitDay)), 'nowrap') + td(esc(p.payerName || '(no payer name)'))
+    + td(esc(p.npi), 'font-mono') + td(esc(p.drugId), 'font-mono')
+    + td(esc(p.periodDay == null ? p.periodRaw : dayToIso(p.periodDay)), 'nowrap')
+    + td(`<span class="${BADGE} ${p.reason === 'WO' ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-slate-800'}">${esc(p.reason)}</span>`)
+    + td(esc(CONFIG.plbReasons[p.reason] || 'Other adjustment'))
+    + td(esc(p.reference), 'font-mono text-xs')
+    + td(fmtMoney(p.amountCents), 'num font-semibold') + '</tr>').join('');
+  const byReason = new Map();
+  for (const p of rows) byReason.set(p.reason, (byReason.get(p.reason) || 0) + p.amountCents);
+  const foot = '<tfoot>' + [...byReason].map(([reason, cents]) => `<tr class="border-t border-slate-200 font-semibold"><td colspan="8" class="px-3 py-1.5">Total ${esc(reason)} (${esc(CONFIG.plbReasons[reason] || 'other')})</td><td class="num px-3 py-1.5">${fmtMoney(cents)}</td></tr>`).join('') + '</tfoot>';
+  $('ledger').innerHTML = simpleTable([['Remit date'], ['Payer'], ['NPI'], ['Drug ID'], ['PLB02 date'], ['Code'], ['Meaning'], ['Reference'], ['Amount', true]], body, foot);
+}
+
+function renderPayments() {
+  const td = (html, cls = '') => `<td class="px-3 py-1.5 ${cls}">${html}</td>`;
+  const rows = [...state.transactions].sort((a, b) => (a.remitDay ?? Infinity) - (b.remitDay ?? Infinity));
+  const body = rows.map((t) => '<tr class="border-t border-slate-100">'
+    + td(esc(dayToIso(t.remitDay)) + (t.paymentDay == null && t.remitDay != null ? ' <span class="text-xs text-amber-700">(DTM*405)</span>' : ''), 'nowrap')
+    + td(esc(t.payerName || '(no payer name)')) + td(esc(t.payeeName))
+    + td(esc(t.npi || t.payeeNpi), 'font-mono') + td(esc(t.taxId ? maskTail(t.taxId) : ''), 'font-mono')
+    + td(esc(t.method)) + td(esc(t.trace), 'font-mono text-xs')
+    + td(fmtMoney(t.totalCents), 'num') + td(t.claims.length.toLocaleString('en-US'), 'num')
+    + td(t.balanced ? '<span class="text-emerald-700">✔ balances</span>' : `<span class="text-amber-700" title="Expected ${esc(fmtMoney(t.expectedCents))}">⚠ off by ${fmtMoney((t.totalCents ?? 0) - t.expectedCents)}</span>`, 'nowrap')
+    + '</tr>').join('');
+  $('payments').innerHTML = simpleTable([['Remit date'], ['Payer (N1*PR)'], ['Payee (N1*PE)'], ['NPI'], ['Tax ID'], ['Method'], ['Trace (TRN02)'], ['BPR02 paid', true], ['Claims', true], ['Balance check']], body);
+}
+
+/* ---------- 8. Exports (Blob + download link, built in the browser) ---------- */
+const money = (cents) => ({ raw: centsToPlain(cents) });
+
+function csvCell(value) {
+  if (value == null) return '';
+  if (typeof value === 'object' && 'raw' in value) return value.raw;
+  if (typeof value === 'number') return String(value);
+  let s = String(value);
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; // keep file-supplied text from running as a spreadsheet formula
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+function toCsv(rows) { return rows.map((r) => r.map(csvCell).join(',')).join('\r\n') + '\r\n'; }
+
+function downloadText(fileName, text, type) {
+  const url = URL.createObjectURL(new Blob(['﻿', text], { type }));
+  const a = document.createElement('a');
+  a.href = url; a.download = fileName; a.hidden = true;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+
+/** GFI worksheet: every claim with a gap whose window is still open. Contains PHI. */
+function exportGfiCsv() {
+  const rows = state.derived.filter((c) => c.gapCents > 0 && c.daysLeft != null && c.daysLeft >= 0).sort(defaultOrder);
+  if (!rows.length) { window.alert('No claim has a gap inside its dispute window, so there is nothing to put on a GFI worksheet.'); return; }
+  if (!window.confirm("This file contains patient data. Save it only on this pharmacy's computer.")) return;
+  const header = ['ICN', 'Rx', 'Fill', 'DOS', 'NDC-11', 'Qty', 'SDRA', 'Paid', 'Gap', 'RARC', 'Remit date', 'GFI deadline', 'Days left', 'Suggested reason'];
+  const body = rows.map((c) => [c.icn, c.rxNumber, c.fillNumber, dayToIso(c.dosDay), fmtNdc(c.ndc11, c.ndcRaw), c.qty,
+    money(c.sdraCents), money(c.paidCents), money(c.gapCents), c.rarcs.join(' '), dayToIso(c.remitDay),
+    dayToIso(c.gfiDeadlineDay), c.daysLeft, suggestedReason(c)]);
+  downloadText(`mfp-gfi-worksheet-${dayToIso(localToday())}.csv`, toCsv([header, ...body]), 'text/csv;charset=utf-8');
+}
+
+/** De-identified summary: counts and dollars only. No names, Rx numbers, ICNs,
+ *  or dates finer than month. The only export meant to be shared before a BAA. */
+function exportDeidentifiedCsv() {
+  const dc = state.derived;
+  const rows = [['Dimension', 'Value', 'Claims', 'SDRA (USD)', 'Paid (USD)', 'Gap (USD)', 'Overpaid (USD)']];
+  const add = (dimension, groups, fmtKey = (k) => k) => {
+    for (const g of groups) rows.push([dimension, fmtKey(g.key), g.count, money(g.sdra), money(g.paid), money(g.gap), money(g.overpaid)]);
+  };
+  add('Total', breakdown(dc, () => 'All claims'));
+  add('Category', categoryBreakdown(dc), fullLabel);
+  add('Payer', breakdown(dc, (c) => c.payer));
+  add('Labeler', breakdown(dc, labelerKey));
+  add('Month of service', breakdown(dc, monthKey).sort((a, b) => String(a.key).localeCompare(String(b.key))));
+  add('NDC-11', breakdown(dc, ndcKey));
+  downloadText(`mfp-deidentified-summary-${dayToIso(localToday()).slice(0, 7)}.csv`, toCsv(rows), 'text/csv;charset=utf-8');
+}
+
+/** Print stylesheet (see <style>) keeps only the summary cards and category table. */
+function printSummary() { window.print(); }
+
+/* ---------- 9. Demo data (synthetic: no real people, NDCs or bank data) ---------- */
+
+/** Build a synthetic MTF-style 835 with remit dates relative to `today`:
+ *  2 interchanges, 3 transactions from 2 payers, 12 claims, 1 PLB WO adjustment. */
+function buildDemo835(today) {
+  const E = '*', T = '~\n';
+  const seg = (...els) => els.join(E) + T;
+  const pad = (s, n) => String(s).padEnd(n, ' ').slice(0, n);
+  const isa = (ctrl) => ['ISA', '00', pad('', 10), '00', pad('', 10), 'ZZ', pad('DEMOMTF', 15), 'ZZ', pad('DEMOPHARMACY', 15),
+    dayToX12(today).slice(2), '1200', '^', '00501', ctrl, '0', 'T', ':'].join(E) + T;
+  const gs = (ctrl) => seg('GS', 'HP', 'DEMOMTF', 'DEMOPHARMACY', dayToX12(today), '1200', ctrl, 'X', '005010X221A1');
+  const NPI = '1234567893';
+  const icn = (n) => 'ICN26' + String(n).padStart(8, '0');
+  const claim = (n, rx, fill, status, sdra, paid, ndc, qty, rarc = '', f8 = '') => ({ n, rx, fill, status, sdra, paid, ndc, qty, rarc, f8 });
+  const MTF = 'MEDICARE TRANSACTION FACILITATOR (DEMO)';
+  const payments = [
+    { st: '0001', payer: MTF, method: 'ACH', remit: -130, trace: 'DEMOTRACE0001', plb: [], claims: [   // window expired 10 days ago
+      claim(1, '9000001', '00', '1', '412.50', '0', '99901000101', '30', 'N907'),
+      claim(2, '9000002', '01', '1', '128.40', '128.40', '99901000202', '60'),
+      claim(3, '9000003', '00', '1', '256.00', '0', '99902000101', '28', 'N910'),
+    ] },
+    { st: '0002', payer: MTF, method: 'CHK', remit: -100, trace: 'DEMOCHK0002', plb: [], claims: [     // 20 days left: Urgent
+      claim(4, '9000004', '02', '1', '1024.75', '0', '99901000101', '90', 'N907'),
+      claim(5, '9000005', '00', '1', '300.00', '0', '99903000101', '30', 'N908'),
+      claim(6, '9000006', '03', '1', '640.00', '600.00', '99902000101', '56'),
+      claim(7, '9000007', '00', '1', '75.25', '80.00', '99903000202', '14'),
+      claim(8, '9000002', '01', '22', '-128.40', '-128.40', '99901000202', '60', '', icn(2)),
+    ] },
+    { st: '0003', payer: 'DEMO LABS MANUFACTURER INC', method: 'ACH', remit: -30, trace: 'DEMOTRACE0003', // 90 days left: Open
+      plb: [{ drug: '99902000303', code: 'WO', ref: 'DEMOREF0001', amount: '50.00' }], claims: [
+      claim(9, '9000009', '00', '1', '512.00', '0', '99901000101', '30', 'N907'),
+      claim(10, '9000010', '01', '1', '210.00', '180.00', '99903000101', '30', 'N909'),
+      claim(11, '9000011', '00', '1', '333.33', '0', '99902000303', '84', 'N911'),
+      claim(12, '9000012', '02', '1', '99.99', '99.99', '99903000202', '7'),
+    ] },
+  ];
+  const transaction = (p) => {
+    const remit = today + p.remit;
+    const paid = p.claims.reduce((s, c) => s + toCents(c.paid), 0) - p.plb.reduce((s, x) => s + toCents(x.amount), 0);
+    const sdra = p.claims.reduce((s, c) => s + toCents(c.sdra), 0);
+    const bank = p.method === 'ACH' ? ['CCP', '01', '999999999', 'DA', '000000001', '1999999999', '', '01', '999999999', 'DA', '000000002'] : Array(11).fill('');
+    const segs = [
+      seg('ST', '835', p.st),
+      seg('BPR', 'I', centsToPlain(paid), 'C', p.method, ...bank, dayToX12(remit)),
+      seg('TRN', '1', p.trace, '1999999999'),
+      seg('DTM', '405', dayToX12(remit - 2)),
+      seg('N1', 'PR', p.payer),
+      seg('N1', 'PE', 'DEMO INDEPENDENT PHARMACY', 'XX', NPI),
+      seg('REF', 'EV', '999001234'),
+      seg('LX', NPI),
+      seg('TS3', NPI, '13', dayToX12(remit), String(p.claims.length), centsToPlain(sdra)),
+    ];
+    for (const c of p.claims) {
+      const gap = toCents(c.sdra) - toCents(c.paid);
+      segs.push(seg('CLP', `${c.rx}FILL${c.fill}`, c.status, c.sdra, c.paid, '', '', icn(c.n)));
+      segs.push(seg('NM1', 'QC', '1', 'TEST', 'PATIENT', 'ABCDEFGHIJKL'[c.n - 1]));
+      if (c.f8) segs.push(seg('REF', 'F8', c.f8));
+      segs.push(seg('SVC', `N4:${c.ndc}`, c.sdra, c.paid, '', c.qty));
+      segs.push(seg('DTM', '472', dayToX12(remit - 14 - (c.n % 5))));
+      if (c.status !== '22' && gap !== 0) segs.push(seg('CAS', 'PI', '307', centsToPlain(gap)));
+      if (c.rarc) segs.push(seg('LQ', 'HE', c.rarc));
+    }
+    for (const x of p.plb) segs.push(seg('PLB', NPI + x.drug, dayToX12(remit), `${x.code}:${x.ref}`, x.amount));
+    segs.push(seg('SE', String(segs.length + 1), p.st));
+    return segs.join('');
+  };
+  return isa('000000001') + gs('1') + transaction(payments[0]) + transaction(payments[1]) + seg('GE', '2', '1') + seg('IEA', '1', '000000001')
+    + isa('000000002') + gs('2') + transaction(payments[2]) + seg('GE', '1', '2') + seg('IEA', '1', '000000002');
+}
+
+/* ---------- 10. Self-tests (run after "Load demo data"; results go to the parse log) ---------- */
+function runSelfTests(demoText, today) {
+  const results = [];
+  const check = (name, fn) => {
+    try { const r = fn(); results.push({ name, pass: r === true, detail: r === true ? '' : String(r) }); }
+    catch (err) { results.push({ name, pass: false, detail: 'threw ' + err.message }); }
+  };
+  const expect = (actual, expected) => actual === expected || `expected ${expected}, got ${actual}`;
+  const parse = (txt) => {
+    const r = parse835(txt, 'self-test');
+    const claims = r.transactions.flatMap((t) => t.claims);
+    return { r, claims, dc: deriveClaims(claims, { today, no340B: false }) };
+  };
+  const categoryCounts = (dc) => CATEGORY_ORDER.map((k) => `${k}:${dc.filter((c) => c.category === k).length}`).join(' ');
+  const fingerprint = (p) => { const s = summarize(p.dc); return `${p.dc.length} ${s.sdra} ${s.paid} ${s.gap} ${s.overpaid} ${categoryCounts(p.dc)}`; };
+  const base = parse(demoText);
+  const s = summarize(base.dc);
+
+  check('ISA delimiters detected as * : ~ from a fixed-width ISA', () => { const d = detectDelimiters(demoText, 0); return expect(`${d.element} ${d.component} ${d.segment} ${d.fixedWidth}`, '* : ~ true'); });
+  check('Demo parses to 3 transactions, 12 claims, 0 skipped segments', () => expect(`${base.r.transactions.length}/${base.claims.length}/${base.r.skipped}`, '3/12/0'));
+  check('Total SDRA = $3,863.82', () => expect(fmtMoney(s.sdra), '$3,863.82'));
+  check('Total paid = $959.99', () => expect(fmtMoney(s.paid), '$959.99'));
+  check('Total gap = $2,908.58 (open window $2,240.08, expired $668.50)', () => expect([s.gap, s.openGap, s.expiredGap].map(fmtMoney).join(' '), '$2,908.58 $2,240.08 $668.50'));
+  check('Overpayments tracked separately = $4.75; urgent count = 3', () => expect(`${fmtMoney(s.overpaid)} ${s.urgentCount}`, '$4.75 3'));
+  check('Category counts: N907×3, N908–N911×1, reversal×1, short-pay×1, OK×3', () => expect(categoryCounts(base.dc), 'N907:3 N908:1 N909:1 N910:1 N911:1 REVERSAL:1 OTHER_RARC:0 SHORT_PAY:1 OK:3'));
+  check('Deadline: remit 2024-02-29 + 120 days = 2024-06-28 (leap year)', () => expect(dayToIso(computeDeadlines(x12DateToDay('20240229'), 0).gfiDeadlineDay), '2024-06-28'));
+  check('Clock across DST: remit 2026-03-01 → deadline 2026-06-29; 0 left = Urgent, −1 = Expired, 31 = Open', () => {
+    const remit = x12DateToDay('20260301'), due = x12DateToDay('20260629');
+    const a = computeDeadlines(remit, due), b = computeDeadlines(remit, due + 1), c = computeDeadlines(remit, due - 31);
+    return expect(`${dayToIso(a.gfiDeadlineDay)} ${a.daysLeft} ${a.clock} ${b.daysLeft} ${b.clock} ${c.daysLeft} ${c.clock}`, '2026-06-29 0 Urgent -1 Expired 31 Open');
+  });
+  check('Demo clocks relative to today: −10 Expired, 20 Urgent, 90 Open', () => expect(base.r.transactions.map((t) => { const k = computeDeadlines(t.remitDay, today); return `${k.daysLeft} ${k.clock}`; }).join(', '), '-10 Expired, 20 Urgent, 90 Open'));
+  check('Queue order: daysLeft ascending, then gap descending', () => expect([...base.dc].sort(defaultOrder).map((c) => +c.icn.slice(-2)).join(','), '1,3,2,4,5,6,7,8,9,11,10,12'));
+  check('340B toggle marks the 2 N907 claims inside the window as strong candidates', () => expect(deriveClaims(base.claims, { today, no340B: true }).filter((c) => c.strong).map((c) => c.icn).join(','), 'ICN2600000004,ICN2600000009'));
+  check('CLP01 split: 9000004FILL02 → Rx 9000004, fill 02', () => { const c = base.claims.find((x) => x.icn === 'ICN2600000004'); return expect(`${c.rxNumber}/${c.fillNumber}`, '9000004/02'); });
+  check('Reversal REF*F8 links back to the original ICN', () => expect(base.dc.find((c) => c.icn === 'ICN2600000002').referencedBy.join(), 'ICN2600000008'));
+  check('PLB: one WO adjustment of $50.00 for NPI 1234567893', () => expect(base.r.transactions.flatMap((t) => t.plb).map((p) => `${p.reason} ${fmtMoney(p.amountCents)} ${p.npi} ${p.drugId}`).join(), 'WO $50.00 1234567893 99902000303'));
+  check('Every demo transaction balances (BPR02 = ΣCLP04 − ΣPLB)', () => expect(base.r.transactions.every((t) => t.balanced), true));
+  check('Same results with no line breaks', () => expect(fingerprint(parse(demoText.replace(/~\n/g, '~'))), fingerprint(base)));
+  check('Same results with | > delimiters and CR/LF as the segment terminator', () => expect(fingerprint(parse(demoText.replace(/\*/g, '|').replace(/:/g, '>').replace(/~\n/g, '\r\n'))), fingerprint(base)));
+  check('Malformed segments are skipped and counted, not fatal', () => {
+    const bad = parse(demoText.replace('TRN*1*DEMOTRACE0001', '%%NOT A SEGMENT%%~\nTRN*1*DEMOTRACE0001').replace('CAS*PI*307*412.50~', 'CAS*PI*307*ABC~'));
+    return expect(`${bad.r.skipped} ${bad.claims.length} ${fmtMoney(summarize(bad.dc).gap)}`, `2 12 ${fmtMoney(s.gap)}`);
+  });
+  check('A malformed CLP skips that claim and its child segments only', () => {
+    const bad = parse(demoText.replace('CLP*9000003FILL00*1*256.00', 'CLP*9000003FILL00*1*BAD'));
+    return expect(`${bad.claims.length} ${bad.r.skipped}`, '11 6');
+  });
+  check('Missing BPR16 falls back to the DTM*405 production date', () => {
+    const p = parse(demoText.replace(/^(BPR\*[^~]*\*)\d{8}~/m, '$1~'));
+    return expect(dayToIso(p.r.transactions[0].remitDay), dayToIso(today - 132));
+  });
+  check('Non-835 transaction sets are skipped', () => { const p = parse(demoText.replace('ST*835*0001', 'ST*277*0001')); return expect(`${p.r.otherTx} ${p.claims.length}`, '1 9'); });
+  check('Money is summed in integer cents (0.10 + 0.20 = 30¢; ".5" = 50¢; "1,000" rejected)', () => expect(`${toCents('0.10') + toCents('0.20')} ${toCents('.5')} ${toCents('-0')} ${Number.isNaN(toCents('1,000'))}`, '30 50 0 true'));
+  check('Not an X12 file: logged, no crash', () => { const p = parse('%PDF-1.7 hello'); return expect(`${p.r.transactions.length} ${p.r.log[0].level}`, '0 error'); });
+  return results;
+}
+
+/* ---------- 11. Events ---------- */
+function init() {
+  // Keep a file dropped outside the zone from replacing this page (and its in-memory data).
+  for (const type of ['dragover', 'drop']) window.addEventListener(type, (e) => e.preventDefault());
+
+  const zone = $('dropZone');
+  const highlight = (on) => { zone.classList.toggle('border-emerald-500', on); zone.classList.toggle('bg-emerald-50', on); };
+  zone.addEventListener('dragenter', (e) => { e.preventDefault(); highlight(true); });
+  zone.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; highlight(true); });
+  zone.addEventListener('dragleave', (e) => { if (!zone.contains(e.relatedTarget)) highlight(false); });
+  zone.addEventListener('drop', (e) => { e.preventDefault(); highlight(false); loadFiles(Array.from(e.dataTransfer?.files || [])); });
+
+  $('fileInput').addEventListener('change', (e) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    loadFiles(files);
+  });
+
+  $('demoBtn').addEventListener('click', () => {
+    const today = localToday();
+    const text = buildDemo835(today);
+    const added = ingest(text, 'demo-mtf-835.txt (synthetic)');
+    state.selfTests = runSelfTests(text, today);
+    $('logDetails').open = true;
+    renderAll();
+    const passed = state.selfTests.filter((t) => t.pass).length;
+    setStatus(`Demo data loaded: ${plural(added, 'new claim')}. Self-tests: ${passed}/${state.selfTests.length} passed (see parse log).`);
+  });
+
+  $('clearBtn').addEventListener('click', clearAll);
+  $('privacyToggle').addEventListener('change', (e) => { state.privacy = e.target.checked; renderAll(); });
+  $('no340bToggle').addEventListener('change', (e) => { state.no340B = e.target.checked; renderAll(); });
+
+  const onFilter = (key) => (e) => { state.filters[key] = e.target.value; state.queueLimit = CONFIG.queuePageSize; renderQueue(); };
+  $('fView').addEventListener('change', onFilter('view'));
+  $('fCategory').addEventListener('change', onFilter('category'));
+  $('fStatus').addEventListener('change', onFilter('status'));
+  $('fPayer').addEventListener('change', onFilter('payer'));
+  $('fSearch').addEventListener('input', onFilter('search'));
+
+  $('queueHead').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-sort]');
+    if (!btn) return;
+    const key = btn.dataset.sort;
+    state.sort = state.sort.key === key ? { key, dir: state.sort.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: key.endsWith('Cents') ? 'desc' : 'asc' };
+    renderQueue();
+  });
+  $('queueMore').addEventListener('click', () => { state.queueLimit += CONFIG.queuePageSize; renderQueue(); });
+
+  $('gfiBtn').addEventListener('click', exportGfiCsv);
+  $('deidBtn').addEventListener('click', exportDeidentifiedCsv);
+  $('printBtn').addEventListener('click', printSummary);
+  // Stamp the date for the print button and for the browser's own Print command alike.
+  window.addEventListener('beforeprint', () => { $('printDate').textContent = dayToIso(localToday()); });
+
+  renderAll();
+}
+
+init();
+</script>
+</body>
+</html>
