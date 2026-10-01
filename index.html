@@ -420,7 +420,7 @@ function splitSegments(text, d) {
 function parse835(text, fileName) {
   const res = { fileName, interchanges: 0, groups: 0, otherTx: 0, segments: 0, skipped: 0, ignored: {}, transactions: [], log: [] };
   const log = (level, msg, extra = {}) => res.log.push({ level, file: fileName, msg, ...extra });
-  const src = String(text ?? '').replace(/^﻿/, '');
+  const src = String(text ?? '').replace(/^\uFEFF/, '');
   const interchanges = findInterchanges(src, log);
   if (!interchanges.length) {
     log('error', 'No ISA segment found, so this is not an X12 file. Nothing was read from it.');
@@ -1146,7 +1146,7 @@ function csvCell(value) {
 function toCsv(rows) { return rows.map((r) => r.map(csvCell).join(',')).join('\r\n') + '\r\n'; }
 
 function downloadText(fileName, text, type) {
-  const url = URL.createObjectURL(new Blob(['﻿', text], { type }));
+  const url = URL.createObjectURL(new Blob(['\uFEFF', text], { type }));
   const a = document.createElement('a');
   a.href = url; a.download = fileName; a.hidden = true;
   document.body.appendChild(a);
