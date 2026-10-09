@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>MFP Refund Recovery · Refunds owed to independent pharmacies</title>
+<meta name="description" content="Drugmakers owe independent pharmacies Medicare drug-price refunds. We find the missing ones for free, then recover them for 25% of what comes back.">
+<link rel="canonical" href="[SITE URL]">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MFP Refund Recovery">
+<meta property="og:title" content="MFP Refund Recovery">
+<meta property="og:description" content="We find the Medicare drug refunds owed to your pharmacy for free, then recover them for 25% of what comes back. Nothing recovered, nothing owed.">
+<meta property="og:url" content="[SITE URL]">
+<meta property="og:image" content="[SITE URL]/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F7F5EF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/public-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/source-serif-4-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="./">MFP Refund Recovery</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#data-handling">Data handling</a></li>
+        <li><a href="#investors">Investors</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="[DEMO URL]"><span class="label-full">Run the free check</span><span class="label-short">Free check</span></a>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">For independent pharmacies</p>
+        <h1 id="hero-title">The Medicare refunds owed to your pharmacy, found and recovered.</h1>
+        <p class="lede">Since January 1, 2026, drugmakers owe your pharmacy a refund on every eligible fill of 10 Medicare drugs, such as Eliquis and Jardiance.<sup class="fn"><a href="#src-1" id="ref-1" aria-label="Source 1">1</a></sup> Some come back denied, short or late, and each one has a deadline. We find them for free, then recover them for 25% of what comes back. Nothing recovered, nothing owed.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="[DEMO URL]">Run the free check</a>
+          <a class="btn btn-secondary" href="mailto:[CONTACT EMAIL]">Talk to us</a>
+        </div>
+        <p class="trust">
+          <svg class="lock" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 15h8a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 12 7h-.5V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Z"/></svg>
+          <span>The free check runs on your computer, and patient data never leaves the pharmacy.</span>
+        </p>
+      </div>
+
+      <figure class="statement">
+        <table>
+          <caption><span class="statement-title">Remittance summary</span><span class="stamp">Illustrative example</span></caption>
+          <tbody>
+            <tr><th scope="row"><span>Drug</span></th><td><span>Eliquis</span></td></tr>
+            <tr><th scope="row"><span>Rx</span></th><td><span>•••4821</span></td></tr>
+            <tr><th scope="row"><span>Expected refund<span class="formula">SDRA = WAC − MFP</span></span></th><td><span>$375.00</span></td></tr>
+            <tr class="pre-total"><th scope="row"><span>Paid</span></th><td><span>$0.00</span></td></tr>
+            <tr class="is-shortfall"><th scope="row"><span>Shortfall</span></th><td><span>−$375.00</span></td></tr>
+            <tr><th scope="row"><span>Remark code</span></th><td><span><span class="code">N907</span> · 340B flag</span></td></tr>
+            <tr><th scope="row"><span>Dispute window</span></th><td><span>38 days left</span></td></tr>
+          </tbody>
+        </table>
+        <figcaption>Example only. One wrongly flagged Eliquis fill is a refund of about $375, because its list price is about $606 and its MFP is $231.<sup class="fn"><a href="#src-2" id="ref-2" aria-label="Source 2">2</a></sup></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="problem" class="section rule-top" aria-labelledby="problem-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">The problem</p>
+        <h2 id="problem-title">Your pharmacy pays first and waits to be paid back</h2>
+        <p class="section-lede">Here is the path the money takes on one eligible fill, and where it goes missing.</p>
+      </header>
+
+      <ol class="flow">
+        <li>
+          <p class="flow-who">You <span aria-hidden="true">→</span><span class="visually-hidden">to</span> wholesaler</p>
+          <p>You buy the drug at about its list price, the wholesale acquisition cost (WAC).</p>
+        </li>
+        <li>
+          <p class="flow-who">Part D plan <span aria-hidden="true">→</span><span class="visually-hidden">to</span> you</p>
+          <p>The patient’s Medicare drug plan pays you based on the much lower Maximum Fair Price (MFP).</p>
+        </li>
+        <li>
+          <p class="flow-who">MTF <span aria-hidden="true">→</span><span class="visually-hidden">to</span> drugmaker</p>
+          <p>The Medicare Transaction Facilitator (MTF), a system run by CMS, sends the claim to the drugmaker.</p>
+        </li>
+        <li>
+          <p class="flow-who">Drugmaker</p>
+          <p>The drugmaker must pay your refund within 14 days of getting the claim data. The default amount is the Standard Default Refund Amount (SDRA), which is WAC − MFP.<sup class="fn"><a href="#src-1" aria-label="Source 1">1</a></sup></p>
+        </li>
+        <li>
+          <p class="flow-who">Refund <span aria-hidden="true">→</span><span class="visually-hidden">to</span> you</p>
+          <p>You get the money plus an 835 file that explains the payment claim by claim. On average, refunds reach pharmacies about 21 days after the fill.<sup class="fn"><a href="#src-3" id="ref-3" aria-label="Source 3">3</a></sup></p>
+        </li>
+      </ol>
+
+      <h3 class="sub-title">Four ways a refund goes wrong</h3>
+      <dl class="leaks">
+        <div class="leak">
+          <dt><span>Denied</span> <span class="code">N907</span></dt>
+          <dd>The drugmaker thinks the drug was bought at a 340B discount, the deep discount a federal program gives certain hospitals and clinics. If your pharmacy has no 340B contract-pharmacy agreement, that denial is likely wrong.</dd>
+        </div>
+        <div class="leak">
+          <dt><span>Short or unpaid</span> <span class="code">N909 · N910</span></dt>
+          <dd>N909 means a non-standard amount was paid. N910 means no refund at this time. Either way, part of the refund is missing.</dd>
+        </div>
+        <div class="leak">
+          <dt><span>Taken back</span> <span class="code">PLB WO</span></dt>
+          <dd>A clawback appears on a later 835 as a provider-level adjustment and shrinks a future payment.</dd>
+        </div>
+        <div class="leak">
+          <dt><span>Late</span> <span class="code code-neutral">about 21 days</span></dt>
+          <dd>Even a correct refund lands after you have already paid for the drug.<sup class="fn"><a href="#src-3" aria-label="Source 3">3</a></sup> The money isn’t lost, but it squeezes your cash.</dd>
+        </div>
+      </dl>
+
+      <div class="clock">
+        <p class="clock-figure">120 days<span class="clock-label">to dispute each claim</span></p>
+        <p>Each dispute is a good-faith inquiry (GFI), filed one claim at a time in the Resolution Center of Beacon, the system drugmakers use. It must be filed within 120 days of the 835.<sup class="fn"><a href="#src-4" id="ref-4" aria-label="Source 4">4</a></sup> With complete documents, drugmakers resolve GFIs in 3 to 10 days.<sup class="fn"><a href="#src-5" id="ref-5" aria-label="Source 5">5</a></sup></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="stakes" class="section band" aria-labelledby="stakes-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">The stakes</p>
+        <h2 id="stakes-title">What slow refunds could cost an independent pharmacy</h2>
+        <p class="section-lede">Before the program began, the National Community Pharmacists Association (NCPA) released an analysis by 3 Axis Advisors of what it could mean for each pharmacy.<sup class="fn"><a href="#src-6" id="ref-6" aria-label="Source 6">6</a></sup></p>
+      </header>
+      <ul class="figures">
+        <li>
+          <p class="figure">$11,000<span class="unit">a week</span></p>
+          <p>Nearly this much per pharmacy could be tied up in delayed payments.</p>
+        </li>
+        <li>
+          <p class="figure">$43,000<span class="unit">a year</span></p>
+          <p>About this much per pharmacy could be lost.</p>
+        </li>
+        <li>
+          <p class="figure">93.2%</p>
+          <p>of independents were considering not stocking, or had chosen not to stock, at least one of the 10 drugs.</p>
+        </li>
+      </ul>
+      <p class="figures-note">All three are estimates published in January 2025, before the program started.</p>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="section" aria-labelledby="how-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title">Free to check. You pay only when money comes back.</h2>
+        <p class="section-lede">Start with a free check. If it finds money worth fighting for, we recover it. Once you trust the results, MFP Guard keeps watch every month.</p>
+      </header>
+
+      <ol class="layers">
+        <li>
+          <h3>Free check</h3>
+          <p class="layer-price">Free</p>
+          <p>A 20-minute self-audit on your own computer with MFP Refund Check. It shows expected refunds against payments, the dollars behind each denial code and the days left on each claim. We see only totals, never claim lines.</p>
+        </li>
+        <li>
+          <h3>Recovery</h3>
+          <p class="layer-price">25% of refunds paid</p>
+          <p>We dispute every claim worth fighting while its window is open, answer the drugmaker’s requests and confirm payment on your next 835. It starts after a one-page services agreement and a business associate agreement (BAA), the HIPAA contract you sign before an outside helper may see patient data.</p>
+        </li>
+        <li>
+          <h3>MFP Guard</h3>
+          <p class="layer-price">From $199 a month</p>
+          <p>Ongoing monitoring so no refund runs out of time, plus a one-page report every month.</p>
+        </li>
+      </ol>
+
+      <h3 class="sub-title">What working with us looks like</h3>
+      <ol class="steps">
+        <li><p class="step-title">Conversation <span class="step-time">15 minutes</span></p><p>A short call to see whether the free check is worth your time.</p></li>
+        <li><p class="step-title">Free check <span class="step-time">20 minutes</span></p><p>You open your MTF 835 files in MFP Refund Check, on your own computer.</p></li>
+        <li><p class="step-title">Paperwork</p><p>A one-page services agreement and a BAA. You then add us as a user on your MTF account. We never ask for your password.</p></li>
+        <li><p class="step-title">Triage</p><p>We sort open claims by days left, then by dollars, and check each N907 against OPAIS, the public 340B database run by HRSA.</p></li>
+        <li><p class="step-title">Disputes</p><p>We file GFIs in Beacon, or prepare each one for you to submit if your account requires it.</p></li>
+        <li><p class="step-title">Follow-up</p><p>We send wholesaler invoices to the drugmaker, take N911 plan-data errors to the Part D plan and escalate unresolved cases through the MTF Help Desk complaints portal.</p></li>
+        <li><p class="step-title">Payment</p><p>When a refund lands on a later 835, we invoice 25% of it.</p></li>
+        <li><p class="step-title">Recovery Report <span class="step-time">day 90</span></p><p>One page showing what was recovered, what is pending, and what was denied and why.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="pricing" class="section rule-top" aria-labelledby="pricing-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">Pricing</p>
+        <h2 id="pricing-title">Our fee comes only from refunds that arrive</h2>
+      </header>
+      <div class="table-scroll">
+        <table class="pricing">
+          <caption class="visually-hidden">Price of each service</caption>
+          <thead>
+            <tr><th scope="col">Service</th><th scope="col">Price</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><span class="svc">Free check</span><span class="svc-desc">A 20-minute self-audit on your computer</span></th>
+              <td><span class="price">Free</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="svc">Recovery</span><span class="svc-desc">Every claim worth fighting, disputed and followed up</span></th>
+              <td><span class="price">25%</span><span class="price-desc">of refunds actually paid on claims we disputed. Nothing recovered, nothing owed.</span></td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="svc">MFP Guard</span><span class="svc-desc">Monitoring and a one-page monthly report</span></th>
+              <td><span class="price">From $199</span><span class="price-desc">a month. Pilot pricing, with tiers at $199, $349 and $499.</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fine-print">The fee applies only to refunds actually paid. You own your data. Either side can end the agreement with 30 days’ notice. We don’t promise any outcome.</p>
+    </div>
+  </section>
+
+  <section id="data-handling" class="section band" aria-labelledby="data-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">Data handling</p>
+        <h2 id="data-title">Patient data stays on your computer until you sign a BAA</h2>
+        <p class="section-lede">The free check never sends anything off your computer. If you hire us, we see patient data only after a signed BAA, and we follow these rules.</p>
+      </header>
+      <div class="two-col">
+        <div class="col">
+          <h3>The free check</h3>
+          <p class="col-sub">MFP Refund Check is a single web page that reads your MTF 835 files inside your browser.</p>
+          <ul class="checklist">
+            <li>Runs with Wi-Fi off and blocks all network access.</li>
+            <li>Hides patient names by default.</li>
+            <li>Exports a de-identified summary that is safe to share before a BAA.</li>
+            <li>You share totals only. Claim lines stay on your computer.</li>
+            <li>Passes 24 of 24 built-in self-tests.</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>If you hire us</h3>
+          <p class="col-sub">Our rules for any work that touches patient data.</p>
+          <ul class="checklist">
+            <li>No patient data before a signed BAA.</li>
+            <li>We never use your password. You add us as a user on your MTF account.</li>
+            <li>Patient data never goes into consumer AI tools.</li>
+            <li>Patient data stays on your machines or on an encrypted drive.</li>
+            <li>Full-disk encryption and two-factor login on every account we use.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="site-note">This website sets no cookies and loads nothing from third parties.</p>
+    </div>
+  </section>
+
+  <section id="why-now" class="section" aria-labelledby="why-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">Why now</p>
+        <h2 id="why-title">The program is about to get bigger</h2>
+      </header>
+      <ul class="ledger">
+        <li>
+          <p class="ledger-figure">Jan 1, 2027</p>
+          <p class="ledger-text">15 more drugs join the program, including Ozempic, Rybelsus and Wegovy. About 5.3 million Part D enrollees used those 15 drugs in 2024.<sup class="fn"><a href="#src-7" id="ref-7" aria-label="Source 7">7</a></sup></p>
+        </li>
+        <li>
+          <p class="ledger-figure">$350M <span class="unit">a week</span></p>
+          <p class="ledger-text">Roughly what the MTF moves in refunds each week.<sup class="fn"><a href="#src-5" aria-label="Source 5">5</a></sup></p>
+        </li>
+        <li>
+          <p class="ledger-figure">&lt; 0.5%</p>
+          <p class="ledger-text">The share of claims that ever get a GFI.<sup class="fn"><a href="#src-5" aria-label="Source 5">5</a></sup></p>
+        </li>
+        <li>
+          <p class="ledger-figure">18,960</p>
+          <p class="ledger-text">Independent pharmacies in the U.S. as of July 2025. The average one filled 67,601 prescriptions in 2024, about 185 a day, and 52% of independent pharmacy prescriptions are covered by Medicare Part D or Medicaid.<sup class="fn"><a href="#src-8" id="ref-8" aria-label="Source 8">8</a></sup></p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="investors" class="section rule-top" aria-labelledby="investors-title">
+    <div class="wrap split">
+      <header class="section-head">
+        <p class="eyebrow">For partners and investors</p>
+        <h2 id="investors-title">Where the company stands</h2>
+        <p class="section-lede">A short, factual summary. Ask us for the detail behind any line.</p>
+      </header>
+      <dl class="facts">
+        <div><dt>Stage</dt><dd>Working prototype. MFP Refund Check passes 24 of 24 built-in self-tests. We are now inviting our first pilot pharmacies.</dd></div>
+        <div><dt>Model</dt><dd>Recovery on contingency at 25% of refunds actually paid, then MFP Guard, a monthly retainer from $199.</dd></div>
+        <div><dt>What compounds</dt><dd>Every dispute is logged by drugmaker, drug, code, evidence and outcome. Over time, that record shows which claims win and what proof wins them.</dd></div>
+        <div><dt>Team</dt><dd>Founded by <span class="ph">[FOUNDER NAME]</span>, <span class="ph">[ONE-LINE BACKGROUND]</span>.</dd></div>
+        <div><dt>Contact</dt><dd><span class="ph">[CONTACT EMAIL]</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="faq" class="section band" aria-labelledby="faq-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2 id="faq-title">What owners ask first</h2>
+      </header>
+      <div class="faq">
+        <details>
+          <summary>Do you need my MTF password?</summary>
+          <p>No. You add us as a user on your MTF account, so we never ask for or use your password.</p>
+        </details>
+        <details>
+          <summary>What do you see during the free check?</summary>
+          <p>Only totals. The check runs on your computer and the claim lines stay there. It can also export a de-identified summary, which is safe to share before a BAA.</p>
+        </details>
+        <details>
+          <summary>What if nothing is recovered?</summary>
+          <p>You owe nothing. The fee is 25% of refunds actually paid on claims we disputed.</p>
+        </details>
+        <details>
+          <summary>Is this a government program?</summary>
+          <p>No. MFP Refund Recovery is an independent company. We are not affiliated with CMS or the Medicare Transaction Facilitator.</p>
+        </details>
+        <details>
+          <summary>We have 340B contracts. Does this still help?</summary>
+          <p>An N907 denial may be correct for your pharmacy. Short pays (N909 and N910), clawbacks and late refunds still count, and the free check shows all of them.</p>
+        </details>
+        <details>
+          <summary>Doesn’t my PSAO already do this?</summary>
+          <p>Ask them. Some pharmacy services administrative organizations (PSAOs) may. We can work alongside yours.</p>
+        </details>
+        <details>
+          <summary>Can I stop at any time?</summary>
+          <p>Yes. Either side can end the agreement with 30 days’ notice.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" aria-labelledby="cta-title">
+    <div class="wrap cta-inner">
+      <h2 id="cta-title">Find out what you’re owed in 20 minutes.</h2>
+      <p>The free check runs on your computer and costs nothing.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="[DEMO URL]">Run the free check</a>
+        <a class="btn btn-secondary" href="mailto:[CONTACT EMAIL]">Talk to us</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-id">
+        <p class="wordmark">MFP Refund Recovery</p>
+        <p>Contact: <span class="ph">[CONTACT EMAIL]</span></p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <ul>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#data-handling">Data handling</a></li>
+          <li><a href="#investors">Investors</a></li>
+          <li><a href="#faq">Questions</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <h2 id="sources-title" class="sources-title">Sources</h2>
+      <ol>
+        <li id="src-1">Covington, <cite>Countdown to IRA pricing updates and MFP effectuation</cite>, December 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-1" aria-label="Back to the first mention of source 1">↑</a></li>
+        <li id="src-2"><span class="vendor">Vendor</span> BestRx, <cite>Maximum Fair Price documentation</cite>. <span class="ph">[URL]</span> <a class="backref" href="#ref-2" aria-label="Back to the first mention of source 2">↑</a></li>
+        <li id="src-3">CMS, <cite>MTF FAQ for pharmacies and other dispensing entities</cite>, updated April 2026. <span class="ph">[URL]</span> <a class="backref" href="#ref-3" aria-label="Back to the first mention of source 3">↑</a></li>
+        <li id="src-4"><span class="vendor">Vendor</span> Plenful, <cite>Announcing GFI Agent</cite>, July 2026. <span class="ph">[URL]</span> <a class="backref" href="#ref-4" aria-label="Back to the first mention of source 4">↑</a></li>
+        <li id="src-5"><span class="vendor">Vendor</span> Plenful, <cite>Up to 20% of expected MFP refunds are missing</cite>, August 2026. <span class="ph">[URL]</span> <a class="backref" href="#ref-5" aria-label="Back to the first mention of source 5">↑</a></li>
+        <li id="src-6">NCPA, <cite>New analysis on pharmacy cash flow</cite>, January 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-6" aria-label="Back to the first mention of source 6">↑</a></li>
+        <li id="src-7">NCPA, <cite>CMS announces MFPs for 15 drugs in 2027</cite>, December 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-7" aria-label="Back to the first mention of source 7">↑</a></li>
+        <li id="src-8">NCPA, <cite>2025 Digest Report</cite>, October 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-8" aria-label="Back to the first mention of source 8">↑</a></li>
+      </ol>
+    </section>
+
+    <div class="legal">
+      <p>MFP Refund Recovery is an independent company, not affiliated with or endorsed by CMS, HHS, the Medicare Transaction Facilitator or any drugmaker. Nothing here is legal advice. Results are not guaranteed.</p>
+      <p>© 2026 MFP Refund Recovery</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
