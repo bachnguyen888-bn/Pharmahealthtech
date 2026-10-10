@@ -1,0 +1,4 @@
+# Netlify settings. The website is the site/ folder. The index.html at the repo root is the
+# offline checker, which is not part of the website, so it must never be the publish folder.
+[build]
+  publish = "site"
