@@ -162,6 +162,7 @@
   <symbol id="i-eye-off" viewBox="0 0 16 16"><path d="M2 2l12 12M6.6 3.4A6.9 6.9 0 0 1 8 3.25c3.6 0 5.9 3.2 6.5 4.75-.3.8-1 2-2.1 3M10 12.3c-.6.3-1.3.45-2 .45-3.6 0-5.9-3.2-6.5-4.75.4-1 1.3-2.4 2.6-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
   <symbol id="i-arrow-l" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow-r" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 16 16"><path d="M8 13V3.5M3.75 7.5 8 3.25l4.25 4.25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-download" viewBox="0 0 16 16"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M2.75 13.75h10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-globe" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1.75 8h12.5M8 1.75c1.8 1.7 2.75 3.8 2.75 6.25S9.8 12.55 8 14.25C6.2 12.55 5.25 10.45 5.25 8S6.2 3.45 8 1.75Z" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
   <symbol id="i-mail" viewBox="0 0 16 16"><rect x="1.75" y="3.25" width="12.5" height="9.5" rx="1.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m2.5 4.25 5.5 4.25 5.5-4.25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
@@ -176,7 +177,7 @@
 
 <header class="nav">
   <div class="wrap nav-inner lg">
-    <a class="brand" href="./">
+    <a class="brand" href="#top" aria-label="ClearHealth, back to the top">
       <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#1D5C40"/><rect x="8" y="9" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="14.75" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="20.5" width="9" height="2.5" rx="1.25" fill="#FFFFFF"/></svg>
       <span>ClearHealth</span>
     </a>
@@ -192,7 +193,7 @@
     <div class="nav-right">
       <a class="nav-text" href="mailto:hello@bachnguyenclearhealth.com">Talk to us</a>
       <a class="nav-quiet" href="#investors">Investors</a>
-      <a class="btn btn-dark btn-sm" href="mailto:hello@bachnguyenclearhealth.com">Join the pilot</a>
+      <a class="btn btn-dark btn-sm" href="#pilot">Join the pilot</a>
     </div>
     <details class="menu">
       <summary aria-label="Menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></summary>
@@ -203,7 +204,7 @@
         <a href="#data-handling">Data handling</a>
         <a href="#investors">Investors</a>
         <a href="#faq">FAQ</a>
-        <a class="btn btn-dark" href="mailto:hello@bachnguyenclearhealth.com">Join the pilot</a>
+        <a class="btn btn-dark" href="#pilot">Join the pilot</a>
       </nav>
     </details>
   </div>
@@ -218,7 +219,7 @@
       <h1 id="hero-title">Missing Medicare refunds, found and recovered.</h1>
       <p class="hero-sub">Since January 1, 2026, drugmakers owe your pharmacy a refund on every eligible fill of 10 Medicare drugs, and some come back denied, short or late.<sup class="fn"><a href="#src-1" id="ref-1" aria-label="Source 1">1</a></sup> We help you find them in a free, 20-minute guided self-audit on your own computer, then recover them for 25% of what comes back.</p>
       <div class="actions actions-center">
-        <a class="btn btn-dark" href="mailto:hello@bachnguyenclearhealth.com">Join the pilot</a>
+        <a class="btn btn-dark" href="#pilot">Join the pilot</a>
         <a class="btn btn-outline" href="mailto:hello@bachnguyenclearhealth.com">Talk to us</a>
       </div>
     </div>
@@ -252,7 +253,7 @@
           <span class="shot-chip"><svg class="icon" aria-hidden="true"><use href="#i-wifi-off"/></svg>Offline</span>
         </div>
         <div class="shot-media">
-          <a class="shot-zoom" href="img/product-check-2240.webp" aria-label="Open the full-size screenshot"><img src="img/product-check-1120.webp" srcset="img/product-check-1120.webp 1120w, img/product-check-2240.webp 2240w" sizes="(min-width: 1392px) 1060px, calc(100vw - 80px)" width="1120" height="794" decoding="async" alt="An in-development view of the self-audit, with synthetic demo data. Summary cards show $2,240.08 still inside the dispute window. Below, an action queue lists claims by days left, with N907 340B flags marked as strong dispute candidates."></a>
+          <a class="shot-zoom" href="img/product-check-2240.webp" target="_blank" rel="noopener" aria-label="Open the full-size screenshot in a new tab"><img src="img/product-check-1120.webp" srcset="img/product-check-1120.webp 1120w, img/product-check-2240.webp 2240w" sizes="(min-width: 1392px) 1060px, calc(100vw - 80px)" width="1120" height="794" decoding="async" alt="An in-development view of the self-audit, with synthetic demo data. Summary cards show $2,240.08 still inside the dispute window. Below, an action queue lists claims by days left, with N907 340B flags marked as strong dispute candidates."></a>
           <ul class="notes" aria-label="Callouts">
             <li class="note note-green n-offline">Runs offline</li>
             <li class="note note-blue n-file">Ready to file</li>
@@ -460,7 +461,7 @@
         <h2 id="bento-title">Designed for how MTF money actually moves</h2>
         <p class="section-sub">What the guided self-audit looks at, shown in mockups. It is designed to run on your own computer, with nothing uploaded.</p>
         <div class="actions actions-center">
-          <a class="btn btn-light" href="mailto:hello@bachnguyenclearhealth.com">Join the pilot</a>
+          <a class="btn btn-light" href="#pilot">Join the pilot</a>
           <a class="btn btn-ghost" href="#pricing">See pricing</a>
         </div>
       </div>
@@ -539,7 +540,7 @@
         <h2 id="control-title">You set the boundaries. You see every dispute.</h2>
         <p class="section-sub">Patient data stays on your computer until you sign a BAA. After that, you decide what we can see, and every claim we work is on your Recovery Report.</p>
         <div class="actions actions-center">
-          <a class="btn btn-dark" href="mailto:hello@bachnguyenclearhealth.com">Join the pilot</a>
+          <a class="btn btn-dark" href="#pilot">Join the pilot</a>
           <a class="btn btn-outline" href="mailto:hello@bachnguyenclearhealth.com">Talk to us</a>
         </div>
       </div>
@@ -612,7 +613,7 @@
             <li>Days left on every claim</li>
             <li>We see totals only, never claim lines</li>
           </ul>
-          <a class="btn btn-outline btn-block" href="mailto:hello@bachnguyenclearhealth.com">Join the pilot</a>
+          <a class="btn btn-outline btn-block" href="#pilot">Join the pilot</a>
         </article>
         <article class="plan plan-main">
           <div class="plan-head"><h3>Recovery</h3><p class="plan-flag">No recovery, no fee</p></div>
@@ -699,23 +700,74 @@
     </div>
   </section>
 
-  <!-- Closing CTA -->
-  <section class="dark closing" aria-labelledby="closing-title">
-    <div class="closing-tiles" aria-hidden="true">
-      <span class="tile ct-1 t-coin"><svg viewBox="0 0 120 120"><use href="#m-coin"/></svg></span>
-      <span class="tile ct-2 t-shield"><svg viewBox="0 0 120 120"><use href="#m-shield"/></svg></span>
-      <span class="tile ct-3 t-calendar"><svg viewBox="0 0 120 120"><use href="#m-calendar"/></svg></span>
-      <span class="tile ct-4 t-pill"><svg viewBox="0 0 120 120"><use href="#m-pill"/></svg></span>
-      <span class="tile ct-5 t-receipt"><svg viewBox="0 0 120 120"><use href="#m-receipt"/></svg></span>
-      <span class="tile ct-6 t-lock"><svg viewBox="0 0 120 120"><use href="#m-lock"/></svg></span>
-      <span class="tile ct-7 t-clock"><svg viewBox="0 0 120 120"><use href="#m-clock"/></svg></span>
-      <span class="tile ct-8 t-search"><svg viewBox="0 0 120 120"><use href="#m-search"/></svg></span>
-    </div>
-    <div class="wrap closing-inner">
-      <h2 id="closing-title">Find out what you’re owed.<br>It takes <span class="keep">about 20 minutes.</span></h2>
-      <div class="actions actions-center">
-        <a class="btn btn-light" href="mailto:hello@bachnguyenclearhealth.com">Join the pilot</a>
-        <a class="btn btn-ghost" href="mailto:hello@bachnguyenclearhealth.com">Talk to us</a>
+  <!-- Join the pilot: closing section with the sign-up form -->
+  <section id="pilot" class="dark closing" aria-labelledby="pilot-title">
+    <div class="wrap pilot">
+      <div class="pilot-copy">
+        <p class="eyebrow eyebrow-dark">Join the pilot</p>
+        <h2 id="pilot-title">Find out what you’re owed.<br>It takes <span class="keep">about 20 minutes.</span></h2>
+        <p class="pilot-sub">We are inviting our first pilot pharmacies. Tell us about yours, and we’ll set up your free, 20-minute guided self-audit.</p>
+        <ul class="pilot-points">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>The self-audit is free. The fee applies only to refunds actually paid.</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>No patient data reaches us before a signed BAA.</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>We never ask for your MTF password.</li>
+        </ul>
+        <p class="pilot-alt">Prefer email? <a href="mailto:hello@bachnguyenclearhealth.com">hello@bachnguyenclearhealth.com</a></p>
+      </div>
+
+      <div class="pilot-side">
+        <span class="tile pt-1 t-coin" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-coin"/></svg></span>
+        <span class="tile pt-2 t-calendar" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-calendar"/></svg></span>
+        <span class="tile pt-3 t-shield" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-shield"/></svg></span>
+        <div class="pilot-card lg">
+          <form id="pilot-form" class="pilot-form" data-to="hello@bachnguyenclearhealth.com">
+            <p class="form-title">Pilot sign-up</p>
+            <div class="field-row">
+              <div class="field">
+                <label for="pf-name">Your name</label>
+                <input id="pf-name" name="name" type="text" autocomplete="name" required maxlength="120">
+              </div>
+              <div class="field">
+                <label for="pf-pharmacy">Pharmacy name</label>
+                <input id="pf-pharmacy" name="pharmacy" type="text" autocomplete="organization" required maxlength="160">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="pf-email">Email</label>
+                <input id="pf-email" name="email" type="email" autocomplete="email" required maxlength="160">
+              </div>
+              <div class="field">
+                <label for="pf-phone">Phone <span class="opt">(optional)</span></label>
+                <input id="pf-phone" name="phone" type="tel" autocomplete="tel" maxlength="40">
+              </div>
+            </div>
+            <div class="field">
+              <label for="pf-notes">Anything we should know? <span class="opt">(optional)</span></label>
+              <textarea id="pf-notes" name="notes" rows="3" maxlength="1200" aria-describedby="pf-notes-hint"></textarea>
+              <p id="pf-notes-hint" class="hint">Please don’t include any patient information.</p>
+            </div>
+            <button class="btn btn-light btn-block" type="submit">Join the pilot</button>
+            <p class="form-fine">This site doesn’t store your details. The button writes an email to hello@bachnguyenclearhealth.com, and nothing is sent until you send it yourself.</p>
+            <noscript><p class="form-fine">To join without this form, email hello@bachnguyenclearhealth.com.</p></noscript>
+          </form>
+
+          <div id="pilot-done" class="pilot-done" tabindex="-1" hidden>
+            <p class="done-title"><span class="done-check"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>Your email is ready</p>
+            <p class="done-sub">Send it from your email app, or copy it into a new email to hello@bachnguyenclearhealth.com.</p>
+            <label class="done-label" for="pilot-message">Your email</label>
+            <textarea id="pilot-message" class="done-message" rows="9" readonly></textarea>
+            <div class="done-actions">
+              <a id="pilot-send" class="btn btn-light btn-sm" href="mailto:hello@bachnguyenclearhealth.com"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Open in my email app</a>
+              <button id="pilot-copy" class="btn btn-ghost btn-sm" type="button">Copy the email</button>
+            </div>
+            <p id="pilot-copy-status" class="copy-status" role="status" aria-live="polite"></p>
+            <div class="done-foot">
+              <button id="pilot-edit" class="link-btn" type="button">Edit my details</button>
+              <a class="link-btn" href="#top"><svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg>Back to home</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -726,7 +778,7 @@
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <a class="brand brand-dark" href="./">
+        <a class="brand brand-dark" href="#top" aria-label="ClearHealth, back to the top">
           <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#1D5C40"/><rect x="8" y="9" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="14.75" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="20.5" width="9" height="2.5" rx="1.25" fill="#FFFFFF"/></svg>
           <span>ClearHealth</span>
         </a>
@@ -769,7 +821,7 @@
 
     <div class="footer-bottom">
       <div class="get">
-        <a class="btn btn-ghost btn-sm" href="mailto:hello@bachnguyenclearhealth.com"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Join the pilot</a>
+        <a class="btn btn-ghost btn-sm" href="#pilot">Join the pilot</a>
       </div>
       <div class="social">
         <a class="round-btn round-dark" href="mailto:hello@bachnguyenclearhealth.com" aria-label="Email us"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></a>
@@ -783,5 +835,7 @@
     </div>
   </div>
 </footer>
+
+<a class="to-top" href="#top" hidden><svg class="icon" aria-hidden="true"><use href="#i-arrow-up"/></svg><span>Back to top</span></a>
 </body>
 </html>
