@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<script type="importmap">
+{ "imports": {
+  "three": "./node_modules/three/build/three.module.js",
+  "three/addons/": "./node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<script type="module">
+// Monochrome purple studio render: glossy geometric shapes, soft light, a glowing halo.
+// Composed for a 16:9 frame whose centre will sit behind a browser window on the site.
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const P = new URLSearchParams(location.search);
+const W = Number(P.get('w') || 1920), H = Number(P.get('h') || 1080);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.VSMShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = Number(P.get('env') ?? 0.55);
+
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 200);
+camera.position.set(0, 0, 20);
+camera.lookAt(0, 0, 0);
+
+// Backdrop: radial purple gradient, lighter at the centre where the window will float.
+const backdrop = new THREE.Mesh(
+  new THREE.PlaneGeometry(40, 24),
+  new THREE.ShaderMaterial({
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: `
+      varying vec2 vUv;
+      vec3 lin(vec3 c){ return pow(c, vec3(2.2)); }
+      void main(){
+        vec2 p = (vUv - vec2(0.5, 0.53)) * vec2(1.55, 1.0);
+        float d = length(p);
+        vec3 c0 = lin(vec3(0.89, 0.78, 1.00));   // #E3C7FF centre
+        vec3 c1 = lin(vec3(0.70, 0.40, 0.98));   // #B366FA
+        vec3 c2 = lin(vec3(0.45, 0.15, 0.80));   // #7326CC
+        vec3 c3 = lin(vec3(0.19, 0.04, 0.38));   // #300A61 corners
+        vec3 col = mix(c0, c1, smoothstep(0.00, 0.30, d));
+        col = mix(col, c2, smoothstep(0.26, 0.60, d));
+        col = mix(col, c3, smoothstep(0.50, 0.98, d));
+        gl_FragColor = vec4(col, 1.0);
+      }`,
+  })
+);
+backdrop.position.z = -7;
+scene.add(backdrop);
+
+const shadowCatcher = new THREE.Mesh(new THREE.PlaneGeometry(40, 24), new THREE.ShadowMaterial({ color: 0x24064f, opacity: 0.16 }));
+shadowCatcher.position.z = -6.9;
+shadowCatcher.receiveShadow = true;
+scene.add(shadowCatcher);
+
+// Lights: a large soft key from the upper left front, a gentle lilac fill, a violet rim.
+const key = new THREE.DirectionalLight(0xffffff, 3.0);
+key.position.set(-3, 5, 18);
+key.castShadow = true;
+key.shadow.mapSize.set(4096, 4096);
+key.shadow.camera.left = -26; key.shadow.camera.right = 26;
+key.shadow.camera.top = 18; key.shadow.camera.bottom = -18;
+key.shadow.camera.near = 1; key.shadow.camera.far = 70;
+key.shadow.radius = 18;
+key.shadow.blurSamples = 25;
+key.shadow.bias = -0.0005;
+scene.add(key);
+scene.add(new THREE.HemisphereLight(0xf1e6ff, 0x2a0a5e, 0.45));
+const rim = new THREE.DirectionalLight(0xd8b4fe, 2.2);
+rim.position.set(8, -5, -5);
+scene.add(rim);
+const rim2 = new THREE.DirectionalLight(0xe9d5ff, 1.2);
+rim2.position.set(-9, -2, -4);
+scene.add(rim2);
+
+// Materials, all in one purple family.
+const gloss = (hex, extra = {}) => new THREE.MeshPhysicalMaterial({
+  color: hex, roughness: 0.2, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, ...extra,
+});
+const p950 = gloss(0x3b0764);
+const p800 = gloss(0x6b21a8);
+const p700 = gloss(0x7e22ce);
+const p500 = gloss(0xa855f7);
+const p400 = gloss(0xc084fc);
+const p200 = gloss(0xe9d5ff, { roughness: 0.16 });
+const glass = new THREE.MeshPhysicalMaterial({
+  color: 0xf5ebff, roughness: 0.03, metalness: 0, transmission: 1, thickness: 1.6, ior: 1.5,
+  attenuationColor: new THREE.Color(0xc084fc), attenuationDistance: 3.5, clearcoat: 1, clearcoatRoughness: 0.02,
+});
+const glow = (hex, i) => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: hex, emissiveIntensity: i });
+
+const add = (geo, mat, pos, rot = [0, 0, 0], cast = true, parent = scene) => {
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(...pos); m.rotation.set(...rot);
+  m.castShadow = cast;
+  parent.add(m); return m;
+};
+
+// The glowing halo sits behind where the window will be.
+// A soft additive glow around the ring, so only the halo glows and nothing else hazes.
+const haloGlow = new THREE.Mesh(
+  new THREE.PlaneGeometry(22, 22),
+  new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false,
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: `
+      varying vec2 vUv;
+      void main(){
+        float r = length(vUv - 0.5) * 22.0;
+        float g = exp(-pow((r - 6.5) / 0.9, 2.0)) * 0.55 + exp(-pow((r - 6.5) / 2.6, 2.0)) * 0.22;
+        gl_FragColor = vec4(vec3(0.85, 0.55, 1.0) * g, 1.0);
+      }`,
+  })
+);
+haloGlow.position.set(0, 0.1, -4.6);
+haloGlow.rotation.set(0.16, -0.2, 0);
+scene.add(haloGlow);
+add(new THREE.TorusGeometry(6.5, 0.075, 32, 320), glow(0xf0abfc, 3.2), [0, 0.1, -4.5], [0.16, -0.2, 0], false);
+add(new THREE.TorusGeometry(7.5, 0.03, 24, 320), glow(0xd8b4fe, 1.8), [0.2, 0, -5.5], [0.1, 0.18, 0.3], false);
+
+// A two-tone capsule, the one nod to pharmacy.
+const capsule = new THREE.Group();
+const half = 0.85, r = 0.6;
+add(new THREE.CylinderGeometry(r, r, half, 96, 1, true), p800, [0, half / 2, 0], [0, 0, 0], true, capsule);
+add(new THREE.SphereGeometry(r, 96, 48, 0, Math.PI * 2, 0, Math.PI / 2), p800, [0, half, 0], [0, 0, 0], true, capsule);
+add(new THREE.CylinderGeometry(r, r, half, 96, 1, true), p200, [0, -half / 2, 0], [0, 0, 0], true, capsule);
+add(new THREE.SphereGeometry(r, 96, 48, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), p200, [0, -half, 0], [0, 0, 0], true, capsule);
+capsule.position.set(-6.5, -3.15, 1.2); capsule.rotation.set(0.35, 0.3, -0.9);
+scene.add(capsule);
+
+// A coin with a raised rim, turned on a lathe.
+const coinProfile = [[0, 0.1], [0.78, 0.1], [0.8, 0.16], [0.95, 0.16], [1.0, 0.12], [1.02, 0], [1.0, -0.12], [0.95, -0.16], [0.8, -0.16], [0.78, -0.1], [0, -0.1]]
+  .map(([x, y]) => new THREE.Vector2(x, y));
+add(new THREE.LatheGeometry(coinProfile, 160), p500, [-2.5, -4.95, 1.0], [1.2, 0.3, 0.25]);
+
+add(new THREE.SphereGeometry(1.7, 128, 96), p700, [-6.9, 3.45, 0.4]);                                    // big sphere, top left
+add(new RoundedBoxGeometry(1.9, 1.9, 1.9, 8, 0.4), glass, [6.4, 3.75, 1.6], [0.5, 0.75, 0.12]);           // glass cube, top right
+add(new THREE.TorusGeometry(1.0, 0.42, 96, 192), p400, [7.0, -0.7, 0.6], [0.95, -0.55, 0.4]);              // donut, right
+add(new THREE.SphereGeometry(0.6, 96, 64), glass, [6.75, -4.2, 2.0]);                                     // glass bead, bottom right
+add(new THREE.SphereGeometry(0.36, 64, 48), p200, [-8.0, 0.55, 1.4]);                                     // dot, left edge
+add(new THREE.SphereGeometry(0.34, 64, 48), p800, [2.9, 4.95, 0.9]);                                      // dot, top edge
+add(new THREE.SphereGeometry(1.15, 96, 64), p950, [9.0, 1.6, -2.0]);                                      // far right, mostly out of frame
+add(new THREE.SphereGeometry(0.5, 96, 64), p400, [-9.2, -4.6, -1.0]);                                     // far left, out of the crop
+
+const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 }));
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), Number(P.get('bloom') ?? 0.18), Number(P.get('radius') ?? 0.2), 1.0));
+composer.addPass(new OutputPass());
+
+renderer.render(scene, camera); // warm-up so transmission and shadow maps are ready
+composer.render();
+window.__done = true;
+</script>
+</body>
+</html>

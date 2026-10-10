@@ -1,0 +1,9 @@
+{
+  "name": "stage-render",
+  "private": true,
+  "description": "Renders the purple 3D stage behind the product screenshot on the landing page.",
+  "dependencies": {
+    "playwright": "1.56.1",
+    "three": "0.169.0"
+  }
+}

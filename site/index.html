@@ -13,7 +13,8 @@
 <meta property="og:title" content="MFP Refund Recovery">
 <meta property="og:description" content="We find the Medicare drug refunds owed to your pharmacy for free, then recover them for 25% of what comes back. Nothing recovered, nothing owed.">
 <meta property="og:url" content="[SITE URL]">
-<meta property="og:image" content="[SITE URL]/og-image.png">
+<meta property="og:image" content="[SITE URL]/og-image.jpg">
+<meta property="og:image:alt" content="MFP Refund Recovery: Missing Medicare refunds, found and recovered. A free check that runs on your own computer.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -174,7 +175,7 @@
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="nav">
-  <div class="wrap nav-inner">
+  <div class="wrap nav-inner lg">
     <a class="brand" href="./">
       <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#1D5C40"/><rect x="8" y="9" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="14.75" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="20.5" width="9" height="2.5" rx="1.25" fill="#FFFFFF"/></svg>
       <span>MFP Refund Recovery</span>
@@ -241,15 +242,17 @@
 
   <!-- Product screenshot -->
   <section class="product" aria-label="MFP Refund Check, the free check">
-    <div class="wrap">
-      <figure class="shot">
-        <div class="shot-bar">
+    <div class="stage3d">
+      <img class="stage3d-art" src="img/stage-1440.webp" srcset="img/stage-1440.webp 1440w, img/stage-2880.webp 2880w" sizes="(min-width: 1392px) 1360px, calc(100vw - 32px)" width="1440" height="810" decoding="async" alt="">
+      <figure class="browser lg">
+        <div class="browser-bar">
           <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="shot-title">MFP Refund Check · index.html</span>
-          <span class="shot-chip"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Offline</span>
+          <span class="browser-nav" aria-hidden="true"><svg class="icon"><use href="#i-arrow-l"/></svg><svg class="icon"><use href="#i-arrow-r"/></svg></span>
+          <span class="browser-url"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg><span class="url-text"><span class="url-scheme">file:///</span><span class="url-dir">MFP-Refund-Check/</span>index.html</span></span>
+          <span class="shot-chip"><svg class="icon" aria-hidden="true"><use href="#i-wifi-off"/></svg>Offline</span>
         </div>
         <div class="shot-media">
-          <a class="shot-zoom" href="img/product-check-2240.webp" aria-label="Open the full-size screenshot"><img src="img/product-check-1120.webp" srcset="img/product-check-1120.webp 1120w, img/product-check-2240.webp 2240w" sizes="(min-width: 1168px) 1120px, calc(100vw - 40px)" width="1120" height="794" decoding="async" alt="MFP Refund Check with synthetic demo data. Summary cards show $2,240.08 still inside the dispute window. Below, an action queue lists claims by days left, with N907 340B flags marked as strong dispute candidates."></a>
+          <a class="shot-zoom" href="img/product-check-2240.webp" aria-label="Open the full-size screenshot"><img src="img/product-check-1120.webp" srcset="img/product-check-1120.webp 1120w, img/product-check-2240.webp 2240w" sizes="(min-width: 1392px) 1060px, calc(100vw - 80px)" width="1120" height="794" decoding="async" alt="MFP Refund Check with synthetic demo data. Summary cards show $2,240.08 still inside the dispute window. Below, an action queue lists claims by days left, with N907 340B flags marked as strong dispute candidates."></a>
           <ul class="notes" aria-label="Callouts">
             <li class="note note-green n-offline">Runs offline</li>
             <li class="note note-blue n-file">Ready to file</li>
@@ -260,7 +263,9 @@
           </ul>
         </div>
       </figure>
-      <p class="shot-caption">The free check, shown with synthetic demo data. Patient names stay hidden by default, and nothing leaves the computer it runs on.</p>
+    </div>
+    <div class="wrap">
+      <p class="shot-caption">The free check, shown with synthetic demo data. It opens as a file in your browser: patient names stay hidden by default, and nothing leaves the computer it runs on.</p>
     </div>
   </section>
 
@@ -286,7 +291,7 @@
     <input class="step-radio" type="radio" name="step" id="step-4">
     <div class="wrap steps-grid">
       <div class="stage">
-        <div class="stage-card">
+        <div class="stage-card lg">
           <div class="stage-head">
             <span class="chip-mascot t-receipt" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-receipt"/></svg></span>
             <div>
@@ -540,21 +545,21 @@
       </div>
 
       <div class="horizon" aria-hidden="true">
-        <div class="win win-access">
+        <div class="win win-access lg">
           <p class="win-title"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>MTF account access</p>
           <div class="win-row"><span>How we get in</span><strong>You add us as a user</strong></div>
           <div class="win-row"><span>Your password</span><strong class="ok"><svg class="icon"><use href="#i-check"/></svg>Never asked for</strong></div>
           <div class="win-row"><span>Patient data</span><strong class="ok"><svg class="icon"><use href="#i-check"/></svg>After a signed BAA</strong></div>
           <div class="win-actions"><span class="fake-btn">Cancel</span><span class="fake-btn fake-dark">Add user</span></div>
         </div>
-        <div class="win win-scope">
+        <div class="win win-scope lg">
           <p class="win-title"><svg class="icon" aria-hidden="true"><use href="#i-eye-off"/></svg>What we can see</p>
           <div class="scope-row"><span>Free check totals</span><span class="switch switch-on"><i></i></span></div>
           <div class="scope-row"><span>Claim lines</span><span class="tag">After BAA</span></div>
           <div class="scope-row"><span>Patient names</span><span class="tag">Hidden by default</span></div>
           <div class="scope-row"><span>Consumer AI tools</span><span class="tag tag-no">Never</span></div>
         </div>
-        <div class="win win-report">
+        <div class="win win-report lg">
           <p class="win-title"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Recovery Report · day 90</p>
           <div class="report-row"><span class="dot dot-green"></span><span>What was recovered</span></div>
           <div class="report-row"><span class="dot dot-amber"></span><span>What is still pending</span></div>
