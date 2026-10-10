@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
@@ -17,290 +17,633 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#F7F5EF">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/public-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/source-serif-4-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
+<script src="main.js" defer></script>
 </head>
 <body>
+<!-- Sprite: brand mascots (playful layer) and line icons (product layer). -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="mb-s" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6"/></filter>
+    <filter id="mb-m" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.2"/></filter>
+    <g id="m-face">
+      <ellipse cx="-9" cy="0" rx="3.4" ry="4.4" fill="#26262E"/>
+      <ellipse cx="9" cy="0" rx="3.4" ry="4.4" fill="#26262E"/>
+      <circle cx="-7.9" cy="-1.7" r="1.3" fill="#FFFFFF"/>
+      <circle cx="10.1" cy="-1.7" r="1.3" fill="#FFFFFF"/>
+      <path d="M-4.6 6.4 Q0 10.6 4.6 6.4" fill="none" stroke="#26262E" stroke-width="2.3" stroke-linecap="round"/>
+      <ellipse cx="-15.4" cy="6.2" rx="3.9" ry="2.4" fill="#FF5C7A" opacity=".42"/>
+      <ellipse cx="15.4" cy="6.2" rx="3.9" ry="2.4" fill="#FF5C7A" opacity=".42"/>
+    </g>
+    <path id="m-spark" d="M0 -6 C0.8 -1.6 1.6 -0.8 6 0 C1.6 0.8 0.8 1.6 0 6 C-0.8 1.6 -1.6 0.8 -6 0 C-1.6 -0.8 -0.8 -1.6 0 -6 Z" fill="#FFFFFF"/>
+    <linearGradient id="mg-pill-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9F8A"/><stop offset="1" stop-color="#EE4D37"/></linearGradient>
+    <linearGradient id="mg-pill-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E6E1EE"/></linearGradient>
+    <linearGradient id="mg-coin-rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD95C"/><stop offset="1" stop-color="#E39600"/></linearGradient>
+    <radialGradient id="mg-coin-face" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#FFF6BF"/><stop offset=".55" stop-color="#FFD24A"/><stop offset="1" stop-color="#F5B000"/></radialGradient>
+    <linearGradient id="mg-paper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E2E9F7"/></linearGradient>
+    <linearGradient id="mg-shield" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FDB97"/><stop offset="1" stop-color="#12925E"/></linearGradient>
+    <radialGradient id="mg-shield-in" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#B4F7D4"/><stop offset=".6" stop-color="#5ED99D"/><stop offset="1" stop-color="#2BB577"/></radialGradient>
+    <linearGradient id="mg-cal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E7E4EF"/></linearGradient>
+    <linearGradient id="mg-cal-top" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8E7E"/><stop offset="1" stop-color="#EF5143"/></linearGradient>
+    <linearGradient id="mg-ring" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6B6E80"/><stop offset="1" stop-color="#3C3F4F"/></linearGradient>
+    <linearGradient id="mg-violet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ABA0FF"/><stop offset="1" stop-color="#6650EE"/></linearGradient>
+    <radialGradient id="mg-lens" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D9E6FF"/></radialGradient>
+    <linearGradient id="mg-cap" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D9DAE6"/></linearGradient>
+    <linearGradient id="mg-amber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFBE55"/><stop offset="1" stop-color="#E5740F"/></linearGradient>
+    <linearGradient id="mg-env" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DFE9FA"/></linearGradient>
+    <linearGradient id="mg-pink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFA2BA"/><stop offset="1" stop-color="#EE4F7E"/></linearGradient>
+    <radialGradient id="mg-dial" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EEEAF5"/></radialGradient>
+    <linearGradient id="mg-steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B9BECD"/><stop offset=".5" stop-color="#EEF0F6"/><stop offset="1" stop-color="#A5ABBD"/></linearGradient>
+    <linearGradient id="mg-teal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FD8E8"/><stop offset="1" stop-color="#1590B8"/></linearGradient>
+  </defs>
+  <symbol id="m-pill" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="101" rx="30" ry="5.5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <g transform="rotate(-30 60 60)">
+      <rect x="20" y="39" width="80" height="42" rx="21" fill="url(#mg-pill-a)"/>
+      <path d="M60 39 H79 A21 21 0 0 1 79 81 H60 Z" fill="url(#mg-pill-b)"/>
+      <rect x="28" y="44.5" width="62" height="8" rx="4" fill="#FFFFFF" opacity=".6" filter="url(#mb-s)"/>
+    </g>
+    <use href="#m-face" transform="translate(60 61) scale(.92)"/>
+  </symbol>
+  <symbol id="m-coin" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="101" rx="28" ry="5.5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <circle cx="60" cy="58" r="36" fill="url(#mg-coin-rim)"/>
+    <circle cx="60" cy="56" r="29" fill="url(#mg-coin-face)"/>
+    <circle cx="60" cy="56" r="29" fill="none" stroke="#FFFFFF" stroke-opacity=".5" stroke-width="1.5"/>
+    <ellipse cx="46" cy="39" rx="12" ry="6.5" transform="rotate(-30 46 39)" fill="#FFFFFF" opacity=".7" filter="url(#mb-s)"/>
+    <use href="#m-spark" transform="translate(86 26) scale(.9)"/>
+    <use href="#m-face" transform="translate(60 60) scale(1.1)"/>
+  </symbol>
+  <symbol id="m-receipt" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="103" rx="28" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <path d="M38 20 H82 Q88 20 88 26 V94 L81 88 L74 94 L67 88 L60 94 L53 88 L46 94 L39 88 L32 94 V26 Q32 20 38 20 Z" fill="url(#mg-paper)" stroke="#BCCBEA" stroke-width="1.6" stroke-linejoin="round"/>
+    <rect x="42" y="30" width="36" height="5" rx="2.5" fill="#B9C8EA"/>
+    <rect x="42" y="74" width="17" height="4.5" rx="2.25" fill="#CBD6EF"/>
+    <rect x="63" y="74" width="15" height="4.5" rx="2.25" fill="#6FA8FF"/>
+    <rect x="36" y="24" width="7" height="50" rx="3.5" fill="#FFFFFF" opacity=".9" filter="url(#mb-s)"/>
+    <use href="#m-face" transform="translate(60 54) scale(1.02)"/>
+  </symbol>
+  <symbol id="m-shield" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="103" rx="26" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <path d="M60 19 L91 30 V55 C91 77 78 91.5 60 99.5 C42 91.5 29 77 29 55 V30 Z" fill="url(#mg-shield)"/>
+    <path d="M60 27 L84 35.6 V55 C84 72.5 74 84 60 91 C46 84 36 72.5 36 55 V35.6 Z" fill="url(#mg-shield-in)"/>
+    <ellipse cx="47" cy="40" rx="8" ry="5" transform="rotate(-25 47 40)" fill="#FFFFFF" opacity=".75" filter="url(#mb-s)"/>
+    <use href="#m-face" transform="translate(60 58) scale(.95)"/>
+  </symbol>
+  <symbol id="m-calendar" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="102" rx="30" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <rect x="27" y="30" width="66" height="64" rx="15" fill="url(#mg-cal)"/>
+    <path d="M27 45 Q27 30 42 30 H78 Q93 30 93 45 V51 H27 Z" fill="url(#mg-cal-top)"/>
+    <rect x="41" y="21" width="7.5" height="18" rx="3.75" fill="url(#mg-ring)"/>
+    <rect x="71.5" y="21" width="7.5" height="18" rx="3.75" fill="url(#mg-ring)"/>
+    <rect x="32" y="34" width="22" height="6" rx="3" fill="#FFFFFF" opacity=".55" filter="url(#mb-s)"/>
+    <use href="#m-face" transform="translate(60 71) scale(1)"/>
+  </symbol>
+  <symbol id="m-search" viewBox="0 0 120 120">
+    <ellipse cx="62" cy="103" rx="30" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <rect x="73" y="66" width="13" height="36" rx="6.5" transform="rotate(-45 79.5 84)" fill="url(#mg-violet)"/>
+    <circle cx="53" cy="52" r="32" fill="url(#mg-violet)"/>
+    <circle cx="53" cy="52" r="24" fill="url(#mg-lens)"/>
+    <path d="M36 45 A18 18 0 0 1 49 33" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+    <use href="#m-face" transform="translate(54 56) scale(.82)"/>
+  </symbol>
+  <symbol id="m-bottle" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="103" rx="27" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <rect x="31" y="35" width="58" height="63" rx="14" fill="url(#mg-amber)"/>
+    <rect x="35" y="18" width="50" height="20" rx="6" fill="url(#mg-cap)"/>
+    <path d="M43 22 V34 M51 22 V34 M59 22 V34 M67 22 V34 M75 22 V34" stroke="#C3C5D4" stroke-width="2" stroke-linecap="round"/>
+    <rect x="36" y="51" width="48" height="34" rx="9" fill="#FFF8EC"/>
+    <rect x="35" y="40" width="7" height="50" rx="3.5" fill="#FFFFFF" opacity=".5" filter="url(#mb-s)"/>
+    <use href="#m-face" transform="translate(60 68) scale(.86)"/>
+  </symbol>
+  <symbol id="m-mail" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="98" rx="32" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <rect x="22" y="32" width="76" height="56" rx="13" fill="url(#mg-env)" stroke="#BCCBEA" stroke-width="1.6"/>
+    <path d="M27 39 L60 62 L93 39" fill="none" stroke="#9BBAF0" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="28" y="36" width="24" height="6" rx="3" fill="#FFFFFF" opacity=".9" filter="url(#mb-s)"/>
+    <use href="#m-face" transform="translate(60 74) scale(.86)"/>
+  </symbol>
+  <symbol id="m-clock" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="103" rx="28" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <rect x="37" y="84" width="8" height="15" rx="4" transform="rotate(30 41 91)" fill="#D93E6C"/>
+    <rect x="75" y="84" width="8" height="15" rx="4" transform="rotate(-30 79 91)" fill="#D93E6C"/>
+    <circle cx="36" cy="31" r="11" fill="url(#mg-pink)"/>
+    <circle cx="84" cy="31" r="11" fill="url(#mg-pink)"/>
+    <circle cx="60" cy="60" r="34" fill="url(#mg-pink)"/>
+    <circle cx="60" cy="60" r="27" fill="url(#mg-dial)"/>
+    <rect x="58.5" y="36.5" width="3" height="6" rx="1.5" fill="#C9C3D6"/>
+    <ellipse cx="45" cy="38" rx="9" ry="5" transform="rotate(-30 45 38)" fill="#FFFFFF" opacity=".55" filter="url(#mb-s)"/>
+    <use href="#m-face" transform="translate(60 63) scale(.95)"/>
+  </symbol>
+  <symbol id="m-lock" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="103" rx="29" ry="5" fill="#1B1B1F" opacity=".16" filter="url(#mb-m)"/>
+    <path d="M43.5 54 V42 A16.5 16.5 0 0 1 76.5 42 V54" fill="none" stroke="url(#mg-steel)" stroke-width="9.5" stroke-linecap="round"/>
+    <rect x="27" y="48" width="66" height="50" rx="16" fill="url(#mg-teal)"/>
+    <rect x="33" y="53" width="26" height="7" rx="3.5" fill="#FFFFFF" opacity=".6" filter="url(#mb-s)"/>
+    <use href="#m-face" transform="translate(60 74) scale(.95)"/>
+  </symbol>
+
+  <symbol id="i-code" viewBox="0 0 16 16"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-file" viewBox="0 0 16 16"><path d="M9.5 1.75H4.25a1.5 1.5 0 0 0-1.5 1.5v9.5a1.5 1.5 0 0 0 1.5 1.5h7.5a1.5 1.5 0 0 0 1.5-1.5V5.5L9.5 1.75Zm0 0V5.5h3.75" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m10.5 10.5 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-send" viewBox="0 0 16 16"><path d="M14.25 1.75 7 9m7.25-7.25L9.75 14.25 7 9 1.75 6.25l12.5-4.5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 16 16"><path d="M2.75 7.25V6A2.75 2.75 0 0 1 5.5 3.25h8M11 .75l2.5 2.5L11 5.75M13.25 8.75V10a2.75 2.75 0 0 1-2.75 2.75h-8M5 15.25l-2.5-2.5L5 10.25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-bars" viewBox="0 0 16 16"><path d="M3 13.5v-5M8 13.5v-11M13 13.5v-7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-list" viewBox="0 0 16 16"><path d="M6 4h8M6 8h8M6 12h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2.75" cy="4" r="1" fill="currentColor"/><circle cx="2.75" cy="8" r="1" fill="currentColor"/><circle cx="2.75" cy="12" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="m4.5 4.5 7 7m0-7-7 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 15h8a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 12 7h-.5V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Z"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 16 16"><path d="M2 2l12 12M6.6 3.4A6.9 6.9 0 0 1 8 3.25c3.6 0 5.9 3.2 6.5 4.75-.3.8-1 2-2.1 3M10 12.3c-.6.3-1.3.45-2 .45-3.6 0-5.9-3.2-6.5-4.75.4-1 1.3-2.4 2.6-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow-l" viewBox="0 0 16 16"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow-r" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-download" viewBox="0 0 16 16"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M2.75 13.75h10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1.75 8h12.5M8 1.75c1.8 1.7 2.75 3.8 2.75 6.25S9.8 12.55 8 14.25C6.2 12.55 5.25 10.45 5.25 8S6.2 3.45 8 1.75Z" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 16 16"><rect x="1.75" y="3.25" width="12.5" height="9.5" rx="1.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m2.5 4.25 5.5 4.25 5.5-4.25" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 16 16"><path fill="currentColor" d="M3.6 6.2H1.4V14h2.2V6.2ZM2.5 2a1.3 1.3 0 1 0 0 2.6A1.3 1.3 0 0 0 2.5 2Zm11.1 7.4c0-2.2-1.2-3.4-3-3.4-1.1 0-1.8.6-2.1 1.1V6.2H6.3V14h2.2v-3.9c0-1 .2-2 1.5-2s1.4 1.2 1.4 2.1V14h2.2V9.4Z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 16 16"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-wifi-off" viewBox="0 0 16 16"><path d="M1.75 6.1a9 9 0 0 1 12.5 0M3.9 8.5a6 6 0 0 1 8.2 0M6.1 10.9a3 3 0 0 1 3.8 0M2.5 2.5l11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="13" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-cookie" viewBox="0 0 16 16"><path d="M13.9 8.6A6 6 0 1 1 7.4 2.1a2 2 0 0 0 2.4 2.4 2 2 0 0 0 2.4 2.4 2 2 0 0 0 1.7 1.7Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 7h.01M8 10.5h.01M5.5 11h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-key" viewBox="0 0 16 16"><circle cx="5" cy="11" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m7.2 8.8 6.3-6.3M11 5l1.8 1.8M9.5 6.5l1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+</svg>
+
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="site-header">
-  <div class="wrap header-inner">
-    <a class="wordmark" href="./">MFP Refund Recovery</a>
-    <nav class="site-nav" aria-label="Main">
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="./">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#1D5C40"/><rect x="8" y="9" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="14.75" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="20.5" width="9" height="2.5" rx="1.25" fill="#FFFFFF"/></svg>
+      <span>MFP Refund Recovery</span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
       <ul>
         <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#what-we-catch">What we catch</a></li>
         <li><a href="#pricing">Pricing</a></li>
         <li><a href="#data-handling">Data handling</a></li>
-        <li><a href="#investors">Investors</a></li>
+        <li><a href="#faq">FAQ</a></li>
       </ul>
     </nav>
-    <a class="btn btn-primary btn-sm" href="[DEMO URL]"><span class="label-full">Run the free check</span><span class="label-short">Free check</span></a>
+    <div class="nav-right">
+      <a class="nav-text" href="mailto:[CONTACT EMAIL]">Talk to us</a>
+      <a class="nav-quiet" href="#investors">Investors</a>
+      <a class="btn btn-dark btn-sm" href="[DEMO URL]">Run the free check</a>
+    </div>
+    <details class="menu">
+      <summary aria-label="Menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></summary>
+      <nav class="menu-panel" aria-label="Mobile">
+        <a href="#how-it-works">How it works</a>
+        <a href="#what-we-catch">What we catch</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#data-handling">Data handling</a>
+        <a href="#investors">Investors</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn btn-dark" href="[DEMO URL]">Run the free check</a>
+      </nav>
+    </details>
   </div>
 </header>
 
 <main id="main">
 
+  <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <p class="eyebrow">For independent pharmacies</p>
-        <h1 id="hero-title">The Medicare refunds owed to your pharmacy, found and recovered.</h1>
-        <p class="lede">Since January 1, 2026, drugmakers owe your pharmacy a refund on every eligible fill of 10 Medicare drugs, such as Eliquis and Jardiance.<sup class="fn"><a href="#src-1" id="ref-1" aria-label="Source 1">1</a></sup> Some come back denied, short or late, and each one has a deadline. We find them for free, then recover them for 25% of what comes back. Nothing recovered, nothing owed.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="[DEMO URL]">Run the free check</a>
-          <a class="btn btn-secondary" href="mailto:[CONTACT EMAIL]">Talk to us</a>
-        </div>
-        <p class="trust">
-          <svg class="lock" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 15h8a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 12 7h-.5V4.5A3.5 3.5 0 0 0 8 1Zm2 6V4.5a2 2 0 1 0-4 0V7h4Z"/></svg>
-          <span>The free check runs on your computer, and patient data never leaves the pharmacy.</span>
-        </p>
+    <div class="wrap hero-inner">
+      <p class="eyebrow">For independent pharmacies</p>
+      <h1 id="hero-title">Missing Medicare refunds, found and recovered.</h1>
+      <p class="hero-sub">Since January 1, 2026, drugmakers owe your pharmacy a refund on every eligible fill of 10 Medicare drugs, and some come back denied, short or late.<sup class="fn"><a href="#src-1" id="ref-1" aria-label="Source 1">1</a></sup> We find them for free on your own computer, then recover them for 25% of what comes back.</p>
+      <div class="actions actions-center">
+        <a class="btn btn-dark" href="[DEMO URL]">Run the free check</a>
+        <a class="btn btn-outline" href="mailto:[CONTACT EMAIL]">Talk to us</a>
       </div>
+    </div>
+  </section>
 
-      <figure class="statement">
-        <table>
-          <caption><span class="statement-title">Remittance summary</span><span class="stamp">Illustrative example</span></caption>
-          <tbody>
-            <tr><th scope="row"><span>Drug</span></th><td><span>Eliquis</span></td></tr>
-            <tr><th scope="row"><span>Rx</span></th><td><span>•••4821</span></td></tr>
-            <tr><th scope="row"><span>Expected refund<span class="formula">SDRA = WAC − MFP</span></span></th><td><span>$375.00</span></td></tr>
-            <tr class="pre-total"><th scope="row"><span>Paid</span></th><td><span>$0.00</span></td></tr>
-            <tr class="is-shortfall"><th scope="row"><span>Shortfall</span></th><td><span>−$375.00</span></td></tr>
-            <tr><th scope="row"><span>Remark code</span></th><td><span><span class="code">N907</span> · 340B flag</span></td></tr>
-            <tr><th scope="row"><span>Dispute window</span></th><td><span>38 days left</span></td></tr>
-          </tbody>
-        </table>
-        <figcaption>Example only. One wrongly flagged Eliquis fill is a refund of about $375, because its list price is about $606 and its MFP is $231.<sup class="fn"><a href="#src-2" id="ref-2" aria-label="Source 2">2</a></sup></figcaption>
+  <!-- Mascot strip: decorative divider -->
+  <div class="mascots" aria-hidden="true">
+    <div class="mascot-row">
+      <span class="tile t-pill"><svg viewBox="0 0 120 120"><use href="#m-pill"/></svg></span>
+      <span class="tile t-coin"><svg viewBox="0 0 120 120"><use href="#m-coin"/></svg></span>
+      <span class="tile t-receipt"><svg viewBox="0 0 120 120"><use href="#m-receipt"/></svg></span>
+      <span class="tile t-shield"><svg viewBox="0 0 120 120"><use href="#m-shield"/></svg></span>
+      <span class="tile t-calendar"><svg viewBox="0 0 120 120"><use href="#m-calendar"/></svg></span>
+      <span class="tile t-search"><svg viewBox="0 0 120 120"><use href="#m-search"/></svg></span>
+      <span class="tile t-bottle"><svg viewBox="0 0 120 120"><use href="#m-bottle"/></svg></span>
+      <span class="tile t-mail"><svg viewBox="0 0 120 120"><use href="#m-mail"/></svg></span>
+      <span class="tile t-clock"><svg viewBox="0 0 120 120"><use href="#m-clock"/></svg></span>
+      <span class="tile t-lock"><svg viewBox="0 0 120 120"><use href="#m-lock"/></svg></span>
+    </div>
+  </div>
+
+  <!-- Product screenshot -->
+  <section class="product" aria-label="MFP Refund Check, the free check">
+    <div class="wrap">
+      <figure class="shot">
+        <div class="shot-bar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="shot-title">MFP Refund Check · index.html</span>
+          <span class="shot-chip"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Offline</span>
+        </div>
+        <div class="shot-media">
+          <a class="shot-zoom" href="img/product-check-2240.webp" aria-label="Open the full-size screenshot"><img src="img/product-check-1120.webp" srcset="img/product-check-1120.webp 1120w, img/product-check-2240.webp 2240w" sizes="(min-width: 1168px) 1120px, calc(100vw - 40px)" width="1120" height="794" decoding="async" alt="MFP Refund Check with synthetic demo data. Summary cards show $2,240.08 still inside the dispute window. Below, an action queue lists claims by days left, with N907 340B flags marked as strong dispute candidates."></a>
+          <ul class="notes" aria-label="Callouts">
+            <li class="note note-green n-offline">Runs offline</li>
+            <li class="note note-blue n-file">Ready to file</li>
+            <li class="note note-yellow n-open">Still recoverable</li>
+            <li class="note note-red n-denied">Denied as 340B</li>
+            <li class="note note-orange n-due">Due in 20 days</li>
+            <li class="note note-violet n-strong">Strong case</li>
+          </ul>
+        </div>
       </figure>
+      <p class="shot-caption">The free check, shown with synthetic demo data. Patient names stay hidden by default, and nothing leaves the computer it runs on.</p>
     </div>
   </section>
 
-  <section id="problem" class="section rule-top" aria-labelledby="problem-title">
-    <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">The problem</p>
-        <h2 id="problem-title">Your pharmacy pays first and waits to be paid back</h2>
-        <p class="section-lede">Here is the path the money takes on one eligible fill, and where it goes missing.</p>
-      </header>
-
-      <ol class="flow">
-        <li>
-          <p class="flow-who">You <span aria-hidden="true">→</span><span class="visually-hidden">to</span> wholesaler</p>
-          <p>You buy the drug at about its list price, the wholesale acquisition cost (WAC).</p>
-        </li>
-        <li>
-          <p class="flow-who">Part D plan <span aria-hidden="true">→</span><span class="visually-hidden">to</span> you</p>
-          <p>The patient’s Medicare drug plan pays you based on the much lower Maximum Fair Price (MFP).</p>
-        </li>
-        <li>
-          <p class="flow-who">MTF <span aria-hidden="true">→</span><span class="visually-hidden">to</span> drugmaker</p>
-          <p>The Medicare Transaction Facilitator (MTF), a system run by CMS, sends the claim to the drugmaker.</p>
-        </li>
-        <li>
-          <p class="flow-who">Drugmaker</p>
-          <p>The drugmaker must pay your refund within 14 days of getting the claim data. The default amount is the Standard Default Refund Amount (SDRA), which is WAC − MFP.<sup class="fn"><a href="#src-1" aria-label="Source 1">1</a></sup></p>
-        </li>
-        <li>
-          <p class="flow-who">Refund <span aria-hidden="true">→</span><span class="visually-hidden">to</span> you</p>
-          <p>You get the money plus an 835 file that explains the payment claim by claim. On average, refunds reach pharmacies about 21 days after the fill.<sup class="fn"><a href="#src-3" id="ref-3" aria-label="Source 3">3</a></sup></p>
-        </li>
-      </ol>
-
-      <h3 class="sub-title">Four ways a refund goes wrong</h3>
-      <dl class="leaks">
-        <div class="leak">
-          <dt><span>Denied</span> <span class="code">N907</span></dt>
-          <dd>The drugmaker thinks the drug was bought at a 340B discount, the deep discount a federal program gives certain hospitals and clinics. If your pharmacy has no 340B contract-pharmacy agreement, that denial is likely wrong.</dd>
-        </div>
-        <div class="leak">
-          <dt><span>Short or unpaid</span> <span class="code">N909 · N910</span></dt>
-          <dd>N909 means a non-standard amount was paid. N910 means no refund at this time. Either way, part of the refund is missing.</dd>
-        </div>
-        <div class="leak">
-          <dt><span>Taken back</span> <span class="code">PLB WO</span></dt>
-          <dd>A clawback appears on a later 835 as a provider-level adjustment and shrinks a future payment.</dd>
-        </div>
-        <div class="leak">
-          <dt><span>Late</span> <span class="code code-neutral">about 21 days</span></dt>
-          <dd>Even a correct refund lands after you have already paid for the drug.<sup class="fn"><a href="#src-3" aria-label="Source 3">3</a></sup> The money isn’t lost, but it squeezes your cash.</dd>
-        </div>
-      </dl>
-
-      <div class="clock">
-        <p class="clock-figure">120 days<span class="clock-label">to dispute each claim</span></p>
-        <p>Each dispute is a good-faith inquiry (GFI), filed one claim at a time in the Resolution Center of Beacon, the system drugmakers use. It must be filed within 120 days of the 835.<sup class="fn"><a href="#src-4" id="ref-4" aria-label="Source 4">4</a></sup> With complete documents, drugmakers resolve GFIs in 3 to 10 days.<sup class="fn"><a href="#src-5" id="ref-5" aria-label="Source 5">5</a></sup></p>
-      </div>
-    </div>
-  </section>
-
-  <section id="stakes" class="section band" aria-labelledby="stakes-title">
-    <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">The stakes</p>
-        <h2 id="stakes-title">What slow refunds could cost an independent pharmacy</h2>
-        <p class="section-lede">Before the program began, the National Community Pharmacists Association (NCPA) released an analysis by 3 Axis Advisors of what it could mean for each pharmacy.<sup class="fn"><a href="#src-6" id="ref-6" aria-label="Source 6">6</a></sup></p>
-      </header>
-      <ul class="figures">
-        <li>
-          <p class="figure">$11,000<span class="unit">a week</span></p>
-          <p>Nearly this much per pharmacy could be tied up in delayed payments.</p>
-        </li>
-        <li>
-          <p class="figure">$43,000<span class="unit">a year</span></p>
-          <p>About this much per pharmacy could be lost.</p>
-        </li>
-        <li>
-          <p class="figure">93.2%</p>
-          <p>of independents were considering not stocking, or had chosen not to stock, at least one of the 10 drugs.</p>
-        </li>
+  <!-- Proof bar: market facts in place of customer logos -->
+  <section class="proof" aria-label="The market">
+    <div class="wrap proof-inner">
+      <p class="proof-lede">Built for the 18,960 independent pharmacies in the U.S.<sup class="fn"><a href="#src-2" id="ref-2" aria-label="Source 2">2</a></sup><br>The average one fills about 185 prescriptions a day.<sup class="fn"><a href="#src-2" aria-label="Source 2">2</a></sup></p>
+      <ul class="proof-marks">
+        <li><strong>10 drugs</strong><span>in the program in 2026<sup class="fn"><a href="#src-1" aria-label="Source 1">1</a></sup></span></li>
+        <li><strong>+15</strong><span>more on Jan 1, 2027<sup class="fn"><a href="#src-3" id="ref-3" aria-label="Source 3">3</a></sup></span></li>
+        <li><strong>120 days</strong><span>to dispute each claim<sup class="fn"><a href="#src-4" id="ref-4" aria-label="Source 4">4</a></sup></span></li>
+        <li><strong>$350M</strong><span>in refunds a week<sup class="fn"><a href="#src-5" id="ref-5" aria-label="Source 5">5</a></sup></span></li>
+        <li><strong>&lt;0.5%</strong><span>of claims ever disputed<sup class="fn"><a href="#src-5" aria-label="Source 5">5</a></sup></span></li>
       </ul>
-      <p class="figures-note">All three are estimates published in January 2025, before the program started.</p>
     </div>
   </section>
 
-  <section id="how-it-works" class="section" aria-labelledby="how-title">
-    <div class="wrap">
-      <header class="section-head">
+  <!-- How it works: step list drives the card on the left (no script) -->
+  <section id="how-it-works" class="section steps-section" aria-labelledby="how-title">
+    <input class="step-radio" type="radio" name="step" id="step-1" checked>
+    <input class="step-radio" type="radio" name="step" id="step-2">
+    <input class="step-radio" type="radio" name="step" id="step-3">
+    <input class="step-radio" type="radio" name="step" id="step-4">
+    <div class="wrap steps-grid">
+      <div class="stage">
+        <div class="stage-card">
+          <div class="stage-head">
+            <span class="chip-mascot t-receipt" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-receipt"/></svg></span>
+            <div>
+              <p class="stage-title">Demo Independent Pharmacy</p>
+              <p class="stage-meta">Recovery setup · example</p>
+            </div>
+          </div>
+
+          <div class="panel panel-1">
+            <p class="panel-label">Free check · totals only</p>
+            <dl class="kv">
+              <div><dt>Claims read</dt><dd class="mono">12</dd></div>
+              <div><dt>Expected refunds (SDRA)</dt><dd class="mono">$3,863.82</dd></div>
+              <div><dt>Paid</dt><dd class="mono">$959.99</dd></div>
+              <div class="kv-good"><dt>Still inside the window</dt><dd class="mono">$2,240.08</dd></div>
+              <div><dt>Past the window</dt><dd class="mono muted">$668.50</dd></div>
+            </dl>
+            <p class="panel-foot">Synthetic demo data. Claim lines stay on your computer.</p>
+          </div>
+
+          <div class="panel panel-2">
+            <p class="panel-label">Paperwork</p>
+            <dl class="kv kv-form">
+              <div><dt>Services agreement</dt><dd><span class="status status-ok"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Signed</span></dd></div>
+              <div><dt>Business associate agreement (BAA)</dt><dd><span class="status status-ok"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Signed</span></dd></div>
+              <div><dt>Patient data we can see</dt><dd>Only after both are signed</dd></div>
+              <div><dt>Fee</dt><dd class="mono">25% of refunds paid</dd></div>
+            </dl>
+            <p class="panel-foot">One page each. Either side can end it with 30 days’ notice.</p>
+          </div>
+
+          <div class="panel panel-3">
+            <p class="panel-label">MTF account access</p>
+            <dl class="kv kv-form">
+              <div><dt>How we get access</dt><dd>You add us as a user</dd></div>
+              <div><dt>Your password</dt><dd><span class="status status-ok"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Never asked for</span></dd></div>
+              <div><dt>Filing</dt><dd>We file, or prepare it for you to submit</dd></div>
+            </dl>
+            <p class="panel-foot">You stay in control of your own account.</p>
+          </div>
+
+          <div class="panel panel-4">
+            <p class="panel-label">Disputes in progress · example</p>
+            <ul class="disputes">
+              <li><span class="code-chip code-red">N907</span><span>GFI filed in Beacon</span><span class="status">Awaiting drugmaker</span></li>
+              <li><span class="code-chip code-red">N910</span><span>Wholesaler invoice sent</span><span class="status">In review</span></li>
+              <li><span class="code-chip code-amber">N911</span><span>Sent to the Part D plan</span><span class="status">Plan data error</span></li>
+            </ul>
+            <p class="panel-foot">On day 90: a one-page Recovery Report.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps-copy">
         <p class="eyebrow">How it works</p>
-        <h2 id="how-title">Free to check. You pay only when money comes back.</h2>
-        <p class="section-lede">Start with a free check. If it finds money worth fighting for, we recover it. Once you trust the results, MFP Guard keeps watch every month.</p>
-      </header>
-
-      <ol class="layers">
-        <li>
-          <h3>Free check</h3>
-          <p class="layer-price">Free</p>
-          <p>A 20-minute self-audit on your own computer with MFP Refund Check. It shows expected refunds against payments, the dollars behind each denial code and the days left on each claim. We see only totals, never claim lines.</p>
-        </li>
-        <li>
-          <h3>Recovery</h3>
-          <p class="layer-price">25% of refunds paid</p>
-          <p>We dispute every claim worth fighting while its window is open, answer the drugmaker’s requests and confirm payment on your next 835. It starts after a one-page services agreement and a business associate agreement (BAA), the HIPAA contract you sign before an outside helper may see patient data.</p>
-        </li>
-        <li>
-          <h3>MFP Guard</h3>
-          <p class="layer-price">From $199 a month</p>
-          <p>Ongoing monitoring so no refund runs out of time, plus a one-page report every month.</p>
-        </li>
-      </ol>
-
-      <h3 class="sub-title">What working with us looks like</h3>
-      <ol class="steps">
-        <li><p class="step-title">Conversation <span class="step-time">15 minutes</span></p><p>A short call to see whether the free check is worth your time.</p></li>
-        <li><p class="step-title">Free check <span class="step-time">20 minutes</span></p><p>You open your MTF 835 files in MFP Refund Check, on your own computer.</p></li>
-        <li><p class="step-title">Paperwork</p><p>A one-page services agreement and a BAA. You then add us as a user on your MTF account. We never ask for your password.</p></li>
-        <li><p class="step-title">Triage</p><p>We sort open claims by days left, then by dollars, and check each N907 against OPAIS, the public 340B database run by HRSA.</p></li>
-        <li><p class="step-title">Disputes</p><p>We file GFIs in Beacon, or prepare each one for you to submit if your account requires it.</p></li>
-        <li><p class="step-title">Follow-up</p><p>We send wholesaler invoices to the drugmaker, take N911 plan-data errors to the Part D plan and escalate unresolved cases through the MTF Help Desk complaints portal.</p></li>
-        <li><p class="step-title">Payment</p><p>When a refund lands on a later 835, we invoice 25% of it.</p></li>
-        <li><p class="step-title">Recovery Report <span class="step-time">day 90</span></p><p>One page showing what was recovered, what is pending, and what was denied and why.</p></li>
-      </ol>
-    </div>
-  </section>
-
-  <section id="pricing" class="section rule-top" aria-labelledby="pricing-title">
-    <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">Pricing</p>
-        <h2 id="pricing-title">Our fee comes only from refunds that arrive</h2>
-      </header>
-      <div class="table-scroll">
-        <table class="pricing">
-          <caption class="visually-hidden">Price of each service</caption>
-          <thead>
-            <tr><th scope="col">Service</th><th scope="col">Price</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row"><span class="svc">Free check</span><span class="svc-desc">A 20-minute self-audit on your computer</span></th>
-              <td><span class="price">Free</span></td>
-            </tr>
-            <tr>
-              <th scope="row"><span class="svc">Recovery</span><span class="svc-desc">Every claim worth fighting, disputed and followed up</span></th>
-              <td><span class="price">25%</span><span class="price-desc">of refunds actually paid on claims we disputed. Nothing recovered, nothing owed.</span></td>
-            </tr>
-            <tr>
-              <th scope="row"><span class="svc">MFP Guard</span><span class="svc-desc">Monitoring and a one-page monthly report</span></th>
-              <td><span class="price">From $199</span><span class="price-desc">a month. Pilot pricing, with tiers at $199, $349 and $499.</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="fine-print">The fee applies only to refunds actually paid. You own your data. Either side can end the agreement with 30 days’ notice. We don’t promise any outcome.</p>
-    </div>
-  </section>
-
-  <section id="data-handling" class="section band" aria-labelledby="data-title">
-    <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">Data handling</p>
-        <h2 id="data-title">Patient data stays on your computer until you sign a BAA</h2>
-        <p class="section-lede">The free check never sends anything off your computer. If you hire us, we see patient data only after a signed BAA, and we follow these rules.</p>
-      </header>
-      <div class="two-col">
-        <div class="col">
-          <h3>The free check</h3>
-          <p class="col-sub">MFP Refund Check is a single web page that reads your MTF 835 files inside your browser.</p>
-          <ul class="checklist">
-            <li>Runs with Wi-Fi off and blocks all network access.</li>
-            <li>Hides patient names by default.</li>
-            <li>Exports a de-identified summary that is safe to share before a BAA.</li>
-            <li>You share totals only. Claim lines stay on your computer.</li>
-            <li>Passes 24 of 24 built-in self-tests.</li>
-          </ul>
+        <h2 id="how-title">From a payment file to a paid refund</h2>
+        <p class="section-sub">Four steps. You pay only when a refund actually arrives.</p>
+        <div class="step-list" role="radiogroup" aria-label="Steps">
+          <label for="step-1" class="step step-1"><span class="step-num">01</span>Run the free check</label>
+          <label for="step-2" class="step step-2"><span class="step-num">02</span>Sign the agreement and BAA</label>
+          <label for="step-3" class="step step-3"><span class="step-num">03</span>Add us as a user on your MTF account</label>
+          <label for="step-4" class="step step-4"><span class="step-num">04</span>We file and follow up</label>
         </div>
-        <div class="col">
-          <h3>If you hire us</h3>
-          <p class="col-sub">Our rules for any work that touches patient data.</p>
-          <ul class="checklist">
-            <li>No patient data before a signed BAA.</li>
-            <li>We never use your password. You add us as a user on your MTF account.</li>
-            <li>Patient data never goes into consumer AI tools.</li>
-            <li>Patient data stays on your machines or on an encrypted drive.</li>
-            <li>Full-disk encryption and two-factor login on every account we use.</li>
-          </ul>
+        <div class="step-texts">
+          <p class="step-text text-1">A 20-minute self-audit on your own computer. MFP Refund Check reads your MTF 835 payment files and shows expected refunds against payments, dollars by denial code and the days left on each claim. We see only the totals.</p>
+          <p class="step-text text-2">A one-page services agreement and a business associate agreement (BAA), the HIPAA contract you sign before an outside helper may see patient data. Nothing patient-level reaches us before both are signed.</p>
+          <p class="step-text text-3">You add us as a user on your Medicare Transaction Facilitator (MTF) account. We never ask for your password. We sort open claims by days left, then by dollars, and check each N907 against HRSA’s public 340B database (OPAIS).</p>
+          <p class="step-text text-4">We file good-faith inquiries (GFIs) in Beacon, the system drugmakers use, and answer their requests. With complete documents, drugmakers resolve GFIs in 3 to 10 days.<sup class="fn"><a href="#src-5" aria-label="Source 5">5</a></sup> When a refund lands on a later 835, we invoice 25% of it.</p>
         </div>
       </div>
-      <p class="site-note">This website sets no cookies and loads nothing from third parties.</p>
     </div>
   </section>
 
-  <section id="why-now" class="section" aria-labelledby="why-title">
+  <!-- What we catch: carousel -->
+  <section id="what-we-catch" class="section catch" aria-labelledby="catch-title">
     <div class="wrap">
-      <header class="section-head">
-        <p class="eyebrow">Why now</p>
-        <h2 id="why-title">The program is about to get bigger</h2>
-      </header>
-      <ul class="ledger">
-        <li>
-          <p class="ledger-figure">Jan 1, 2027</p>
-          <p class="ledger-text">15 more drugs join the program, including Ozempic, Rybelsus and Wegovy. About 5.3 million Part D enrollees used those 15 drugs in 2024.<sup class="fn"><a href="#src-7" id="ref-7" aria-label="Source 7">7</a></sup></p>
+      <div class="catch-head">
+        <div>
+          <p class="eyebrow">What we catch</p>
+          <h2 id="catch-title">Every way a refund goes missing</h2>
+          <p class="section-sub">The free check flags each one on its own. Once you hire us, we follow it through.</p>
+        </div>
+        <div class="carousel-nav" hidden>
+          <button class="round-btn" type="button" data-dir="-1" aria-label="Previous cards" aria-controls="catch-track"><svg class="icon" aria-hidden="true"><use href="#i-arrow-l"/></svg></button>
+          <button class="round-btn" type="button" data-dir="1" aria-label="Next cards" aria-controls="catch-track"><svg class="icon" aria-hidden="true"><use href="#i-arrow-r"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="track-wrap">
+      <ul class="track" id="catch-track" tabindex="0" aria-label="Refund gaps">
+        <li class="leak hue-orange">
+          <div class="leak-top"><span class="chip-mascot t-search" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-search"/></svg></span></div>
+          <div class="leak-body">
+            <h3>Denied as 340B <span class="code-chip code-red">N907</span></h3>
+            <p>The drugmaker thinks you bought the drug at a 340B discount. With no 340B contract-pharmacy agreement, that denial is likely wrong.</p>
+            <p class="chip-label">Shows up as</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg>N907 remark</li><li><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>$0 refund</li></ul>
+            <p class="chip-label">What we do</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>OPAIS check</li><li><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg>GFI in Beacon</li></ul>
+          </div>
         </li>
-        <li>
-          <p class="ledger-figure">$350M <span class="unit">a week</span></p>
-          <p class="ledger-text">Roughly what the MTF moves in refunds each week.<sup class="fn"><a href="#src-5" aria-label="Source 5">5</a></sup></p>
+        <li class="leak hue-green">
+          <div class="leak-top"><span class="chip-mascot t-coin" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-coin"/></svg></span></div>
+          <div class="leak-body">
+            <h3>Short-paid <span class="code-chip code-red">N909</span></h3>
+            <p>A non-standard amount was paid, so part of the expected refund, the Standard Default Refund Amount (SDRA), is missing.</p>
+            <p class="chip-label">Shows up as</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg>N909 remark</li><li><svg class="icon" aria-hidden="true"><use href="#i-bars"/></svg>Below SDRA</li></ul>
+            <p class="chip-label">What we do</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-bars"/></svg>SDRA check</li><li><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg>GFI in Beacon</li></ul>
+          </div>
         </li>
-        <li>
-          <p class="ledger-figure">&lt; 0.5%</p>
-          <p class="ledger-text">The share of claims that ever get a GFI.<sup class="fn"><a href="#src-5" aria-label="Source 5">5</a></sup></p>
+        <li class="leak hue-blue">
+          <div class="leak-top"><span class="chip-mascot t-mail" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-mail"/></svg></span></div>
+          <div class="leak-body">
+            <h3>No refund yet <span class="code-chip code-red">N910</span></h3>
+            <p>The drugmaker reports no refund at this time, so the money you expected is still outstanding.</p>
+            <p class="chip-label">Shows up as</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg>N910 remark</li><li><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>$0 refund</li></ul>
+            <p class="chip-label">What we do</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Invoice proof</li><li><svg class="icon" aria-hidden="true"><use href="#i-repeat"/></svg>Follow-up</li></ul>
+          </div>
         </li>
-        <li>
-          <p class="ledger-figure">18,960</p>
-          <p class="ledger-text">Independent pharmacies in the U.S. as of July 2025. The average one filled 67,601 prescriptions in 2024, about 185 a day, and 52% of independent pharmacy prescriptions are covered by Medicare Part D or Medicaid.<sup class="fn"><a href="#src-8" id="ref-8" aria-label="Source 8">8</a></sup></p>
+        <li class="leak hue-yellow">
+          <div class="leak-top"><span class="chip-mascot t-bottle" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-bottle"/></svg></span></div>
+          <div class="leak-body">
+            <h3>Plan data error <span class="code-chip code-amber">N911</span></h3>
+            <p>A data problem on the Part D plan’s side is holding up the refund. It goes to the plan, not the drugmaker.</p>
+            <p class="chip-label">Shows up as</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg>N911 remark</li><li><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Blocked refund</li></ul>
+            <p class="chip-label">What we do</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg>Send to the plan</li><li><svg class="icon" aria-hidden="true"><use href="#i-repeat"/></svg>Follow-up</li></ul>
+          </div>
+        </li>
+        <li class="leak hue-violet">
+          <div class="leak-top"><span class="chip-mascot t-receipt" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-receipt"/></svg></span></div>
+          <div class="leak-body">
+            <h3>Taken back <span class="code-chip code-red">PLB WO</span></h3>
+            <p>A clawback shows up on a later 835 as a provider-level adjustment and shrinks a future payment.</p>
+            <p class="chip-label">Shows up as</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg>PLB code WO</li><li><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Later 835</li></ul>
+            <p class="chip-label">What we do</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Ledger check</li><li><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg>Dispute</li></ul>
+          </div>
+        </li>
+        <li class="leak hue-rose">
+          <div class="leak-top"><span class="chip-mascot t-clock" aria-hidden="true"><svg viewBox="0 0 120 120"><use href="#m-clock"/></svg></span></div>
+          <div class="leak-body">
+            <h3>Paid late</h3>
+            <p>Even a correct refund lands after you have paid for the drug. CMS reports about 21 days after the fill, on average.<sup class="fn"><a href="#src-6" id="ref-6" aria-label="Source 6">6</a></sup></p>
+            <p class="chip-label">Shows up as</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>Days waiting</li><li><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Cash squeeze</li></ul>
+            <p class="chip-label">What we do</p>
+            <ul class="chips"><li><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>Deadline queue</li><li><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Monthly report</li></ul>
+          </div>
         </li>
       </ul>
     </div>
   </section>
 
-  <section id="investors" class="section rule-top" aria-labelledby="investors-title">
+  <!-- Dark bento band -->
+  <section class="dark bento-band" aria-labelledby="bento-title">
+    <div class="wrap">
+      <div class="band-head">
+        <p class="eyebrow eyebrow-dark">The free check</p>
+        <h2 id="bento-title">Built for how MTF money actually moves</h2>
+        <p class="section-sub">Everything here runs in your browser, on your own computer. Nothing is uploaded.</p>
+        <div class="actions actions-center">
+          <a class="btn btn-light" href="[DEMO URL]">Run the free check</a>
+          <a class="btn btn-ghost" href="#pricing">See pricing</a>
+        </div>
+      </div>
+
+      <div class="bento">
+        <article class="bento-card bento-lg">
+          <h3>Every claim, sorted by deadline</h3>
+          <p>Days left first, then dollars, so the most urgent money sits on top.</p>
+          <div class="mock mock-queue" aria-hidden="true">
+            <div class="mq-head"><span>Days left</span><span>Code</span><span>SDRA</span><span>Gap</span><span>Category</span></div>
+            <div class="mq-row"><span class="badge badge-red">20 · Urgent</span><span class="code-chip code-red">N907</span><span class="mono">$1,024.75</span><span class="mono strong">$1,024.75</span><span class="cat cat-violet">340B flag</span></div>
+            <div class="mq-row"><span class="badge badge-red">20 · Urgent</span><span class="code-chip code-sky">N908</span><span class="mono">$300.00</span><span class="mono strong">$300.00</span><span class="cat cat-sky">Marked as bought at MFP</span></div>
+            <div class="mq-row"><span class="badge badge-green">90 · Open</span><span class="code-chip code-red">N907</span><span class="mono">$512.00</span><span class="mono strong">$512.00</span><span class="cat cat-violet">340B flag</span></div>
+            <div class="mq-row"><span class="badge badge-green">90 · Open</span><span class="code-chip code-amber">N911</span><span class="mono">$333.33</span><span class="mono strong">$333.33</span><span class="cat cat-amber">Part D plan data error</span></div>
+            <div class="mq-row"><span class="badge badge-green">90 · Open</span><span class="code-chip code-red">N909</span><span class="mono">$210.00</span><span class="mono strong">$30.00</span><span class="cat cat-rose">Non-standard payment</span></div>
+          </div>
+        </article>
+
+        <article class="bento-card bento-lg">
+          <h3>Every shortfall, explained</h3>
+          <p>One wrongly flagged Eliquis fill is a refund of about $375.<sup class="fn"><a href="#src-7" id="ref-7" aria-label="Source 7">7</a></sup></p>
+          <div class="mock mock-statement">
+            <table>
+              <caption><span>Remittance summary</span><span class="stamp">Illustrative example</span></caption>
+              <tbody>
+                <tr><th scope="row">Drug</th><td>Eliquis</td></tr>
+                <tr><th scope="row">Rx</th><td>•••4821</td></tr>
+                <tr><th scope="row">Expected refund <span class="formula">SDRA = WAC − MFP</span></th><td>$375.00</td></tr>
+                <tr><th scope="row">Paid</th><td>$0.00</td></tr>
+                <tr class="is-shortfall"><th scope="row">Shortfall</th><td>−$375.00</td></tr>
+                <tr><th scope="row">Remark code</th><td><span class="code-chip code-red">N907</span> 340B flag</td></tr>
+                <tr><th scope="row">Dispute window</th><td>38 days left</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="bento-card">
+          <h3>The 340B check</h3>
+          <p>No contract-pharmacy agreements? Every open N907 is flagged.</p>
+          <div class="mock mock-toggle" aria-hidden="true">
+            <div class="mt-row"><span class="switch switch-on"><i></i></span><span>This pharmacy has no 340B contract-pharmacy agreements</span></div>
+            <div class="mt-result"><span class="code-chip code-red">N907</span><span class="mono">$1,024.75</span><span class="pill-violet">Strong dispute candidate</span></div>
+            <div class="mt-result"><span class="code-chip code-red">N907</span><span class="mono">$512.00</span><span class="pill-violet">Strong dispute candidate</span></div>
+          </div>
+        </article>
+
+        <article class="bento-card">
+          <h3>Clawbacks surfaced</h3>
+          <p>Provider-level adjustments get their own ledger.</p>
+          <div class="mock mock-ledger" aria-hidden="true">
+            <div class="ml-row"><span class="code-chip code-red">WO</span><span>Overpayment recovery</span><span class="mono">$50.00</span></div>
+            <div class="ml-row ml-dim"><span class="code-chip code-sky">FB</span><span>Forwarding balance</span><span class="mono">—</span></div>
+            <div class="ml-total"><span>Taken back this period</span><span class="mono">$50.00</span></div>
+          </div>
+        </article>
+
+        <article class="bento-card">
+          <h3>Exports you control</h3>
+          <p>A GFI worksheet for you. A de-identified summary for us.</p>
+          <div class="mock mock-exports" aria-hidden="true">
+            <div class="me-btn"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span><strong>GFI worksheet (CSV)</strong><small>Contains patient data · stays with you</small></span></div>
+            <div class="me-btn me-alt"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span><strong>De-identified summary (CSV)</strong><small>Safe to share before a BAA</small></span></div>
+          </div>
+        </article>
+      </div>
+      <p class="band-note">Mockups use synthetic demo data.</p>
+    </div>
+  </section>
+
+  <!-- Control & visibility -->
+  <section id="data-handling" class="section control" aria-labelledby="control-title">
+    <div class="wrap">
+      <div class="band-head">
+        <p class="eyebrow">Data handling</p>
+        <h2 id="control-title">You set the boundaries. You see every dispute.</h2>
+        <p class="section-sub">Patient data stays on your computer until you sign a BAA. After that, you decide what we can see, and every claim we work is on your Recovery Report.</p>
+        <div class="actions actions-center">
+          <a class="btn btn-dark" href="[DEMO URL]">Run the free check</a>
+          <a class="btn btn-outline" href="mailto:[CONTACT EMAIL]">Talk to us</a>
+        </div>
+      </div>
+
+      <div class="horizon" aria-hidden="true">
+        <div class="win win-access">
+          <p class="win-title"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>MTF account access</p>
+          <div class="win-row"><span>How we get in</span><strong>You add us as a user</strong></div>
+          <div class="win-row"><span>Your password</span><strong class="ok"><svg class="icon"><use href="#i-check"/></svg>Never asked for</strong></div>
+          <div class="win-row"><span>Patient data</span><strong class="ok"><svg class="icon"><use href="#i-check"/></svg>After a signed BAA</strong></div>
+          <div class="win-actions"><span class="fake-btn">Cancel</span><span class="fake-btn fake-dark">Add user</span></div>
+        </div>
+        <div class="win win-scope">
+          <p class="win-title"><svg class="icon" aria-hidden="true"><use href="#i-eye-off"/></svg>What we can see</p>
+          <div class="scope-row"><span>Free check totals</span><span class="switch switch-on"><i></i></span></div>
+          <div class="scope-row"><span>Claim lines</span><span class="tag">After BAA</span></div>
+          <div class="scope-row"><span>Patient names</span><span class="tag">Hidden by default</span></div>
+          <div class="scope-row"><span>Consumer AI tools</span><span class="tag tag-no">Never</span></div>
+        </div>
+        <div class="win win-report">
+          <p class="win-title"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>Recovery Report · day 90</p>
+          <div class="report-row"><span class="dot dot-green"></span><span>What was recovered</span></div>
+          <div class="report-row"><span class="dot dot-amber"></span><span>What is still pending</span></div>
+          <div class="report-row"><span class="dot dot-red"></span><span>What was denied, and why</span></div>
+        </div>
+      </div>
+
+      <div class="three-col">
+        <div><h3>No BAA, no patient data</h3><p>Before a business associate agreement is signed, we see only the totals you choose to share.</p></div>
+        <div><h3>Never your password</h3><p>You add us as a user on your MTF account. We never ask for your password or use it.</p></div>
+        <div><h3>Nothing in consumer AI tools</h3><p>Patient data stays on your machines or an encrypted drive, with full-disk encryption and two-factor login.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stakes -->
+  <section id="stakes" class="section paper" aria-labelledby="stakes-title">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">The stakes</p>
+          <h2 id="stakes-title">Pharmacies pay first and wait to be paid back</h2>
+        </div>
+        <p class="section-sub">You buy the drug at about its list price (WAC). The Medicare plan pays you based on the lower Maximum Fair Price (MFP). The drugmaker owes you the difference, the SDRA, within 14 days of getting the claim data.<sup class="fn"><a href="#src-1" aria-label="Source 1">1</a></sup></p>
+      </div>
+      <ul class="stats">
+        <li><p class="stat-num">$11,000</p><p class="stat-label">a week per pharmacy could be tied up in delayed payments<sup class="fn"><a href="#src-8" id="ref-8" aria-label="Source 8">8</a></sup></p></li>
+        <li><p class="stat-num">$43,000</p><p class="stat-label">a year per pharmacy could be lost<sup class="fn"><a href="#src-8" aria-label="Source 8">8</a></sup></p></li>
+        <li><p class="stat-num">93.2%</p><p class="stat-label">of independents were considering not stocking, or had chosen not to stock, at least one of the 10 drugs<sup class="fn"><a href="#src-8" aria-label="Source 8">8</a></sup></p></li>
+      </ul>
+      <p class="stats-note">Estimates from an analysis by 3 Axis Advisors, released by the National Community Pharmacists Association (NCPA) in January 2025, before the program began. On January 1, 2027, 15 more drugs join, including Ozempic, Rybelsus and Wegovy.<sup class="fn"><a href="#src-3" aria-label="Source 3">3</a></sup></p>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="section" aria-labelledby="pricing-title">
+    <div class="wrap">
+      <div class="band-head">
+        <p class="eyebrow">Pricing</p>
+        <h2 id="pricing-title">Free to check. Paid only from refunds that arrive.</h2>
+      </div>
+      <div class="plans">
+        <article class="plan">
+          <h3>Free check</h3>
+          <p class="plan-price"><span class="mono">Free</span></p>
+          <p class="plan-desc">A 20-minute self-audit on your own computer.</p>
+          <ul class="ticks">
+            <li>Expected refunds against payments</li>
+            <li>Dollars behind each denial code</li>
+            <li>Days left on every claim</li>
+            <li>We see totals only, never claim lines</li>
+          </ul>
+          <a class="btn btn-outline btn-block" href="[DEMO URL]">Run the free check</a>
+        </article>
+        <article class="plan plan-main">
+          <div class="plan-head"><h3>Recovery</h3><p class="plan-flag">No recovery, no fee</p></div>
+          <p class="plan-price"><span class="mono">25%</span><small>of refunds actually paid</small></p>
+          <p class="plan-desc">Every claim worth fighting, disputed while its window is open.</p>
+          <ul class="ticks">
+            <li>GFIs filed in Beacon, claim by claim</li>
+            <li>Drugmaker requests answered</li>
+            <li>Payment confirmed on your next 835</li>
+            <li>One-page Recovery Report on day 90</li>
+          </ul>
+          <a class="btn btn-dark btn-block" href="mailto:[CONTACT EMAIL]">Talk to us</a>
+        </article>
+        <article class="plan">
+          <h3>MFP Guard</h3>
+          <p class="plan-price"><span class="mono">$199</span><small>a month, to start</small></p>
+          <p class="plan-desc">Pilot pricing, with tiers at $199, $349 and $499.</p>
+          <ul class="ticks">
+            <li>Ongoing monitoring so no refund runs out of time</li>
+            <li>A one-page report every month</li>
+          </ul>
+          <a class="btn btn-outline btn-block" href="mailto:[CONTACT EMAIL]">Talk to us</a>
+        </article>
+      </div>
+      <p class="fine">The fee applies only to refunds actually paid on claims we disputed. You own your data. Either side can end the agreement with 30 days’ notice. We don’t promise any outcome.</p>
+    </div>
+  </section>
+
+  <!-- Investors -->
+  <section id="investors" class="section paper" aria-labelledby="investors-title">
     <div class="wrap split">
-      <header class="section-head">
+      <div>
         <p class="eyebrow">For partners and investors</p>
         <h2 id="investors-title">Where the company stands</h2>
-        <p class="section-lede">A short, factual summary. Ask us for the detail behind any line.</p>
-      </header>
+        <p class="section-sub">A short, factual summary. Ask us for the detail behind any line.</p>
+      </div>
       <dl class="facts">
         <div><dt>Stage</dt><dd>Working prototype. MFP Refund Check passes 24 of 24 built-in self-tests. We are now inviting our first pilot pharmacies.</dd></div>
         <div><dt>Model</dt><dd>Recovery on contingency at 25% of refunds actually paid, then MFP Guard, a monthly retainer from $199.</dd></div>
@@ -311,12 +654,13 @@
     </div>
   </section>
 
-  <section id="faq" class="section band" aria-labelledby="faq-title">
-    <div class="wrap">
-      <header class="section-head">
+  <!-- FAQ -->
+  <section id="faq" class="section" aria-labelledby="faq-title">
+    <div class="wrap split">
+      <div>
         <p class="eyebrow">Questions</p>
         <h2 id="faq-title">What owners ask first</h2>
-      </header>
+      </div>
       <div class="faq">
         <details>
           <summary>Do you need my MTF password?</summary>
@@ -350,53 +694,87 @@
     </div>
   </section>
 
-  <section class="cta" aria-labelledby="cta-title">
-    <div class="wrap cta-inner">
-      <h2 id="cta-title">Find out what you’re owed in 20 minutes.</h2>
-      <p>The free check runs on your computer and costs nothing.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="[DEMO URL]">Run the free check</a>
-        <a class="btn btn-secondary" href="mailto:[CONTACT EMAIL]">Talk to us</a>
+  <!-- Closing CTA -->
+  <section class="dark closing" aria-labelledby="closing-title">
+    <div class="closing-tiles" aria-hidden="true">
+      <span class="tile ct-1 t-coin"><svg viewBox="0 0 120 120"><use href="#m-coin"/></svg></span>
+      <span class="tile ct-2 t-shield"><svg viewBox="0 0 120 120"><use href="#m-shield"/></svg></span>
+      <span class="tile ct-3 t-calendar"><svg viewBox="0 0 120 120"><use href="#m-calendar"/></svg></span>
+      <span class="tile ct-4 t-pill"><svg viewBox="0 0 120 120"><use href="#m-pill"/></svg></span>
+      <span class="tile ct-5 t-receipt"><svg viewBox="0 0 120 120"><use href="#m-receipt"/></svg></span>
+      <span class="tile ct-6 t-lock"><svg viewBox="0 0 120 120"><use href="#m-lock"/></svg></span>
+      <span class="tile ct-7 t-clock"><svg viewBox="0 0 120 120"><use href="#m-clock"/></svg></span>
+      <span class="tile ct-8 t-search"><svg viewBox="0 0 120 120"><use href="#m-search"/></svg></span>
+    </div>
+    <div class="wrap closing-inner">
+      <h2 id="closing-title">Find out what you’re owed.<br>It takes <span class="keep">about 20 minutes.</span></h2>
+      <div class="actions actions-center">
+        <a class="btn btn-light" href="[DEMO URL]">Run the free check</a>
+        <a class="btn btn-ghost" href="mailto:[CONTACT EMAIL]">Talk to us</a>
       </div>
     </div>
   </section>
 
 </main>
 
-<footer class="site-footer">
+<footer class="dark footer">
   <div class="wrap">
     <div class="footer-top">
-      <div class="footer-id">
-        <p class="wordmark">MFP Refund Recovery</p>
-        <p>Contact: <span class="ph">[CONTACT EMAIL]</span></p>
+      <div class="footer-brand">
+        <a class="brand brand-dark" href="./">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#1D5C40"/><rect x="8" y="9" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="14.75" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/><rect x="8" y="20.5" width="9" height="2.5" rx="1.25" fill="#FFFFFF"/></svg>
+          <span>MFP Refund Recovery</span>
+        </a>
+        <p>Medicare drug-price refunds, found and recovered for independent pharmacies.</p>
       </div>
-      <nav class="footer-nav" aria-label="Footer">
+      <div class="commitments">
+        <p class="commit-label">Our commitments, not certifications</p>
         <ul>
-          <li><a href="#how-it-works">How it works</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#data-handling">Data handling</a></li>
-          <li><a href="#investors">Investors</a></li>
-          <li><a href="#faq">Questions</a></li>
+          <li><span class="commit"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></span>BAA first</li>
+          <li><span class="commit"><svg class="icon" aria-hidden="true"><use href="#i-wifi-off"/></svg></span>Offline check</li>
+          <li><span class="commit"><svg class="icon" aria-hidden="true"><use href="#i-cookie"/></svg></span>No cookies</li>
+          <li><span class="commit"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span>Two-factor</li>
         </ul>
-      </nav>
+      </div>
     </div>
 
-    <section class="sources" aria-labelledby="sources-title">
-      <h2 id="sources-title" class="sources-title">Sources</h2>
+    <nav class="footer-cols" aria-label="Footer">
+      <div><p class="col-title">Product</p><ul><li><a href="#how-it-works">Free check</a></li><li><a href="#what-we-catch">MFP Refund Check</a></li><li><a href="#pricing">MFP Guard</a></li><li><a href="[DEMO URL]">Open the demo</a></li></ul></div>
+      <div><p class="col-title">What we catch</p><ul><li><a href="#what-we-catch">340B denials</a></li><li><a href="#what-we-catch">Short pays</a></li><li><a href="#what-we-catch">Clawbacks</a></li><li><a href="#what-we-catch">Late refunds</a></li></ul></div>
+      <div><p class="col-title">Pricing</p><ul><li><a href="#pricing">Free check</a></li><li><a href="#pricing">Recovery, 25%</a></li><li><a href="#pricing">MFP Guard</a></li></ul></div>
+      <div><p class="col-title">How it works</p><ul><li><a href="#how-it-works">The four steps</a></li><li><a href="#how-it-works">Recovery Report</a></li></ul></div>
+      <div><p class="col-title">Data handling</p><ul><li><a href="#data-handling">BAA first</a></li><li><a href="#data-handling">Your password</a></li><li><a href="#data-handling">AI tools</a></li></ul></div>
+      <div><p class="col-title">Learn</p><ul><li><a href="#stakes">The stakes</a></li><li><a href="#faq">FAQ</a></li><li><a href="#sources">Sources</a></li></ul></div>
+      <div><p class="col-title">Company</p><ul><li><a href="#investors">Investors</a></li><li><a href="mailto:[CONTACT EMAIL]">Talk to us</a></li><li><a href="#legal">Disclaimer</a></li></ul></div>
+    </nav>
+
+    <section id="sources" class="sources" aria-labelledby="sources-title">
+      <h2 id="sources-title" class="col-title">Sources</h2>
       <ol>
         <li id="src-1">Covington, <cite>Countdown to IRA pricing updates and MFP effectuation</cite>, December 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-1" aria-label="Back to the first mention of source 1">↑</a></li>
-        <li id="src-2"><span class="vendor">Vendor</span> BestRx, <cite>Maximum Fair Price documentation</cite>. <span class="ph">[URL]</span> <a class="backref" href="#ref-2" aria-label="Back to the first mention of source 2">↑</a></li>
-        <li id="src-3">CMS, <cite>MTF FAQ for pharmacies and other dispensing entities</cite>, updated April 2026. <span class="ph">[URL]</span> <a class="backref" href="#ref-3" aria-label="Back to the first mention of source 3">↑</a></li>
+        <li id="src-2">NCPA, <cite>2025 Digest Report</cite>, October 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-2" aria-label="Back to the first mention of source 2">↑</a></li>
+        <li id="src-3">NCPA, <cite>CMS announces MFPs for 15 drugs in 2027</cite>, December 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-3" aria-label="Back to the first mention of source 3">↑</a></li>
         <li id="src-4"><span class="vendor">Vendor</span> Plenful, <cite>Announcing GFI Agent</cite>, July 2026. <span class="ph">[URL]</span> <a class="backref" href="#ref-4" aria-label="Back to the first mention of source 4">↑</a></li>
         <li id="src-5"><span class="vendor">Vendor</span> Plenful, <cite>Up to 20% of expected MFP refunds are missing</cite>, August 2026. <span class="ph">[URL]</span> <a class="backref" href="#ref-5" aria-label="Back to the first mention of source 5">↑</a></li>
-        <li id="src-6">NCPA, <cite>New analysis on pharmacy cash flow</cite>, January 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-6" aria-label="Back to the first mention of source 6">↑</a></li>
-        <li id="src-7">NCPA, <cite>CMS announces MFPs for 15 drugs in 2027</cite>, December 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-7" aria-label="Back to the first mention of source 7">↑</a></li>
-        <li id="src-8">NCPA, <cite>2025 Digest Report</cite>, October 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-8" aria-label="Back to the first mention of source 8">↑</a></li>
+        <li id="src-6">CMS, <cite>MTF FAQ for pharmacies and other dispensing entities</cite>, updated April 2026. <span class="ph">[URL]</span> <a class="backref" href="#ref-6" aria-label="Back to the first mention of source 6">↑</a></li>
+        <li id="src-7"><span class="vendor">Vendor</span> BestRx, <cite>Maximum Fair Price documentation</cite>. <span class="ph">[URL]</span> <a class="backref" href="#ref-7" aria-label="Back to the first mention of source 7">↑</a></li>
+        <li id="src-8">NCPA, <cite>New analysis on pharmacy cash flow</cite>, January 2025. <span class="ph">[URL]</span> <a class="backref" href="#ref-8" aria-label="Back to the first mention of source 8">↑</a></li>
       </ol>
     </section>
 
-    <div class="legal">
-      <p>MFP Refund Recovery is an independent company, not affiliated with or endorsed by CMS, HHS, the Medicare Transaction Facilitator or any drugmaker. Nothing here is legal advice. Results are not guaranteed.</p>
+    <div class="footer-bottom">
+      <div class="get">
+        <a class="btn btn-ghost btn-sm" href="[DEMO URL]"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Open the demo</a>
+        <a class="btn btn-ghost btn-sm" href="[CHECKER DOWNLOAD URL]"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download the offline checker</a>
+      </div>
+      <div class="social">
+        <a class="round-btn round-dark" href="[LINKEDIN URL]" aria-label="MFP Refund Recovery on LinkedIn"><svg class="icon" aria-hidden="true"><use href="#i-linkedin"/></svg></a>
+        <a class="round-btn round-dark" href="mailto:[CONTACT EMAIL]" aria-label="Email us"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></a>
+      </div>
+    </div>
+
+    <div id="legal" class="legal">
+      <p>MFP Refund Recovery is an independent company, not affiliated with or endorsed by CMS, HHS, the Medicare Transaction Facilitator or any drugmaker. Nothing here is legal advice. Results are not guaranteed. This website sets no cookies and loads nothing from third parties.</p>
       <p>© 2026 MFP Refund Recovery</p>
     </div>
   </div>
