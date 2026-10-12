@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-5b6nQVAPAPh3htpAdPQvhN+jcgLm15g1yAGFxAR514s='; style-src 'sha256-ptNcbg/mM1XD6AxN3jThu0gZUSgZPkK3Ece2W1nsQwc='; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-5b6nQVAPAPh3htpAdPQvhN+jcgLm15g1yAGFxAR514s='; style-src 'sha256-uTuyiamjHxRO/SxcNQK+clyIYSjydYu13FYkHYR9DqI='; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
@@ -1339,6 +1339,142 @@ h2 + .section-sub { margin-top: 16px; }
 .pilot-card select:hover { border-color: rgba(255, 255, 255, .28); }
 .pilot-card select:focus { border-color: var(--dark-accent); background-color: rgba(255, 255, 255, .09); outline: none; box-shadow: 0 0 0 3px rgba(123, 216, 166, .25); }
 .pilot-card select option { background: #FFFFFF; color: var(--ink); }
+
+/* ==========================================================================
+   Pengu theme: space-station colours. Violet for chrome, deep space with
+   stars for the dark bands, soft washes on light sections. Green still means
+   live and progress, amber "in the lab", red CAP and "Never".
+   ========================================================================== */
+:root {
+  --pengu: #5B3FD9;
+  --pengu-hover: #4A2FC4;
+  --pengu-soft: #EEE9FF;
+  --paper: #F6F2FF;
+  --paper-line: #E6DDFB;
+  --dark: #150F33;
+  --dark-card: #221A4A;
+  --dark-line: #352B66;
+  --dark-text-2: #B9B0DE;
+}
+a { color: var(--pengu); }
+a:hover { color: var(--pengu-hover); }
+:focus-visible { outline-color: var(--pengu); }
+.dark :focus-visible { outline-color: #C4B5FF; }
+.eyebrow { color: var(--pengu); }
+.eyebrow-dark { color: #C4B5FF; }
+.btn-dark { background: var(--pengu); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 10px 22px -10px rgba(91, 63, 217, .7); }
+.btn-dark:hover { background: var(--pengu-hover); }
+.plan-main { border-color: var(--pengu); background: linear-gradient(180deg, #EFEAFF 0, #FFFFFF 170px); }
+.plan-main:hover { border-color: var(--pengu); }
+.plan-flag { background: var(--pengu); }
+.paper { border-block-color: var(--paper-line); }
+.stats, .facts { border-top-color: #D9CFF7; }
+
+/* Light sections: soft colour washes. */
+.hero {
+  background:
+    radial-gradient(38% 55% at 8% 12%, #EFE9FF 0%, rgba(239, 233, 255, 0) 70%),
+    radial-gradient(34% 50% at 92% 18%, #E2F8EF 0%, rgba(226, 248, 239, 0) 70%),
+    radial-gradient(40% 45% at 50% 82%, #FFF0F7 0%, rgba(255, 240, 247, 0) 70%),
+    #FFFFFF;
+}
+.steps-section { background: linear-gradient(180deg, #F7F4FF 0%, #FFFFFF 70%); }
+.catch { background: linear-gradient(180deg, #EEFBF5 0%, #FFFFFF 70%); }
+.control { background: linear-gradient(180deg, #EEF5FF 0%, #FFFFFF 70%); }
+#join { background: linear-gradient(180deg, #FFF2F8 0%, #FFFFFF 70%); }
+
+/* Dark bands: deep space with a light dusting of stars and a soft nebula glow. */
+.dark {
+  background-color: var(--dark);
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, .8) 0 1px, rgba(255, 255, 255, 0) 1.6px),
+    radial-gradient(circle at 72% 64%, rgba(255, 255, 255, .55) 0 1px, rgba(255, 255, 255, 0) 1.6px),
+    radial-gradient(circle at 44% 82%, rgba(196, 181, 255, .75) 0 1.2px, rgba(196, 181, 255, 0) 2px),
+    radial-gradient(60% 45% at 85% 0%, rgba(123, 92, 255, .32) 0%, rgba(123, 92, 255, 0) 70%),
+    radial-gradient(50% 40% at 8% 100%, rgba(255, 115, 176, .16) 0%, rgba(255, 115, 176, 0) 70%);
+  background-size: 190px 190px, 250px 250px, 320px 320px, 100% 100%, 100% 100%;
+}
+.bento-card:hover { border-color: #4A3E86; }
+.mock { border-color: #3B2F73; background: #1B1442; }
+.mq-head, .mt-row, .app-week-stats { border-bottom-color: #2E2563; }
+.app-week-stats { border-top-color: #2E2563; }
+.mq-row, .ml-row { border-bottom-color: #2A215C; }
+.me-btn { border-color: #3D3278; background: #241B52; }
+.band-note, .legal { color: #8F86B8; }
+.commit { border-color: #3D3278; background: #1F1847; }
+.round-dark { border-color: #3D3278; }
+.round-dark:hover { background: #241B52; border-color: #6B5FB0; }
+.pilot-card { --lg-tint: rgba(36, 26, 82, .62); }
+
+/* ---------- Pengu's health station (hero scene) ---------- */
+.station { padding-top: 40px; }
+.station-frame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  container-type: inline-size;
+  width: min(100% - 32px, 1360px);
+  margin-inline: auto;
+  border-radius: clamp(22px, 3vw, 36px);
+  background: #8F6BF7;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16), 0 50px 100px -55px rgba(67, 34, 160, .6);
+}
+.station-art { display: block; width: 100%; height: auto; }
+.station-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 14px; list-style: none; background: #FFFFFF; }
+.station-tags a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #FFFFFF;
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.station-tags a:hover { border-color: var(--pengu); color: var(--pengu); }
+.st-dot { display: inline-block; flex: none; width: 8px; height: 8px; border-radius: 50%; }
+.st-live { background: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, .2); }
+.st-lab { background: #F59E0B; box-shadow: 0 0 0 3px rgba(245, 158, 11, .2); }
+.st-rule { background: var(--pengu); box-shadow: 0 0 0 3px rgba(91, 63, 217, .2); }
+.station-key { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
+.station-key .st-dot { margin-left: 6px; }
+@media (min-width: 56em) {
+  /* Labels float above their stations as glass pills, each on a short stem. */
+  .station-tags { position: absolute; inset: 0; display: block; padding: 0; background: none; pointer-events: none; }
+  .station-tags li { position: absolute; transform: translate(-50%, calc(-100% - 12px)); pointer-events: auto; }
+  .station-tags li::after { content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 12px; background: rgba(255, 255, 255, .9); transform: translateX(-50%); }
+  .station-tags li::before { content: ""; position: absolute; left: 50%; top: calc(100% + 10px); width: 7px; height: 7px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 0 3px rgba(255, 255, 255, .35); transform: translateX(-50%); }
+  .station-tags a {
+    padding: 0.5em 1em 0.5em 0.8em;
+    border-color: rgba(255, 255, 255, .9);
+    background: rgba(255, 255, 255, .72);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    backdrop-filter: blur(14px) saturate(180%);
+    box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 24px -12px rgba(46, 16, 101, .55);
+    font-size: clamp(0.75rem, 1.05cqi, 0.9rem);
+  }
+  .station-tags a:hover { background: rgba(255, 255, 255, .92); }
+  /* Anchor points measured from the render (percent of the frame). */
+  .st-move { left: 38%; top: 13.3%; }
+  .st-learn { left: 53.2%; top: 16.6%; }
+  .st-play { left: 67.4%; top: 29.8%; }
+  .st-league { left: 69%; top: 46.4%; }
+  .st-medbay { left: 27.4%; top: 25.8%; }
+  .st-water { left: 41.6%; top: 48.6%; }
+  .st-food { left: 56.5%; top: 55.7%; }
+  .st-rocket { left: 32.9%; top: 40.1%; }
+}
+@media (prefers-reduced-transparency: reduce) { .station-tags a { background: #FFFFFF; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+@media print {
+  .station-tags { position: static; display: flex; background: none; }
+  .station-tags li { position: static; transform: none; }
+  .station-tags li::before, .station-tags li::after { display: none; }
+  .dark { background-image: none; }
+}
 </style>
 </head>
 <body>
@@ -1645,6 +1781,24 @@ h2 + .section-sub { margin-top: 16px; }
         <a class="btn btn-outline" href="https://play.bachnguyenclearhealth.com">Play Facts or Cap</a>
       </div>
     </div>
+  </section>
+
+  <!-- Pengu's health station: the hero scene, with a label on each station -->
+  <section class="station" aria-label="Pengu’s health station">
+    <figure class="station-frame">
+      <img class="station-art" src="img/station-1440.webp" srcset="img/station-1440.webp 1440w, img/station-2880.webp 2880w" sizes="(min-width: 1392px) 1360px, calc(100vw - 32px)" width="1440" height="810" decoding="async" alt="Pengu’s health station: a floating purple planet with a gym, a learning dome, an arcade, a league podium, a med-bay, a water tank, a greenhouse and a rocket, with Pengu on the landing pad in the middle.">
+      <ul class="station-tags" aria-label="Stations">
+        <li class="st-move"><a href="#how-it-works"><span class="st-dot st-lab"></span>Move</a></li>
+        <li class="st-learn"><a href="#how-it-works"><span class="st-dot st-lab"></span>Learn</a></li>
+        <li class="st-play"><a href="https://play.bachnguyenclearhealth.com"><span class="st-dot st-live"></span>Play Facts or Cap</a></li>
+        <li class="st-league"><a href="#inside"><span class="st-dot st-lab"></span>Friend leagues</a></li>
+        <li class="st-medbay"><a href="#healthy"><span class="st-dot st-rule"></span>Healthy by design</a></li>
+        <li class="st-water"><a href="#games"><span class="st-dot st-lab"></span>Sip or Skip</a></li>
+        <li class="st-food"><a href="#games"><span class="st-dot st-lab"></span>Label Detective</a></li>
+        <li class="st-rocket"><a href="#early-access"><span class="st-dot st-rule"></span>Get early access</a></li>
+      </ul>
+    </figure>
+    <p class="shot-caption station-key"><span class="st-dot st-live"></span>Live now <span class="st-dot st-lab"></span>In the lab · Tap a station to explore it.</p>
   </section>
 
   <!-- Mascot strip: decorative divider, with Pengu in the centre -->

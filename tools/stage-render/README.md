@@ -5,6 +5,9 @@ Nothing here ships with the site.
 
 - `scene.html`: the purple stage on the ClearHealth page (`site/img/stage-*.webp`).
 - `pastel.html`: the pastel iridescent stage on the Pengu page (`site/img/stage-pengu-*.webp`).
+- `station.html`: Pengu's health station, the hero scene on the Pengu page (`site/img/station-*.webp`).
+  It also reports each station's label position in `window.__anchors` (percent of the frame); the
+  `.st-*` rules in the Pengu page's CSS use those numbers.
 
 ```sh
 npm install
