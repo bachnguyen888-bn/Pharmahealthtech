@@ -2,3 +2,11 @@
 # offline checker, which is not part of the website, so it must never be the publish folder.
 [build]
   publish = "site"
+
+# Pengu is the homepage. The older ClearHealth refund page is still served at /index.html.
+# To make ClearHealth the homepage again, delete this block.
+[[redirects]]
+  from = "/"
+  to = "/clearhealth-pengu.html"
+  status = 200
+  force = true

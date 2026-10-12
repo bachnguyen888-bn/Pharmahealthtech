@@ -23,14 +23,7 @@ with tempfile.TemporaryDirectory() as tmp:
     for img in SITE.glob('img/*.webp'):
         if img.name.startswith(('stage-pengu-', 'station-')):
             shutil.copy(img, dest / 'img' / img.name)
-    # The 404 page, reworded for Pengu.
-    page = (SITE / '404.html').read_text(encoding='utf-8')
-    for old, new in [('<title>Page not found — ClearHealth</title>', '<title>Page not found · Pengu by ClearHealth</title>'),
-                     ('Everything about MFP Refund Recovery is on the home page.', 'Everything about Pengu is on the home page.'),
-                     ('<a class="btn btn-outline" href="/#pilot">Join the pilot</a>', '<a class="btn btn-outline" href="/#early-access">Get early access</a>')]:
-        assert old in page, old
-        page = page.replace(old, new)
-    (dest / '404.html').write_text(page, encoding='utf-8')
+    shutil.copy(SITE / '404.html', dest / '404.html')
     shutil.make_archive(str(OUT.with_suffix('')), 'zip', tmp, 'pengu-site')
 
 print('wrote', OUT, OUT.stat().st_size, 'bytes')
