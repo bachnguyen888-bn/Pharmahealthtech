@@ -3,10 +3,17 @@
 [build]
   publish = "site"
 
-# Pengu is the homepage. The older ClearHealth refund page is still served at /index.html.
-# To make ClearHealth the homepage again, delete this block.
+# Pengu is the homepage. This rule comes first so "/" is always served the Pengu page.
 [[redirects]]
   from = "/"
   to = "/clearhealth-pengu.html"
   status = 200
+  force = true
+
+# /index.html used to be the paused pharmacy refund page, which has been removed from the site.
+# Old links to it go to the homepage.
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
   force = true

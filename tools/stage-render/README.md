@@ -1,9 +1,10 @@
 # Stage render
 
-The 3D artwork behind the browser window on each page is a real three.js scene, rendered offline.
+The 3D artwork on the Pengu page is a real three.js scene, rendered offline.
 Nothing here ships with the site.
 
-- `scene.html`: the purple stage on the ClearHealth page (`site/img/stage-*.webp`).
+- `scene.html`: the purple stage from the old pharmacy page. That page has been removed, so its
+  images are no longer in `site/`.
 - `pastel.html`: the pastel iridescent stage on the Pengu page (`site/img/stage-pengu-*.webp`).
 - `station.html`: Pengu's health station, the hero scene on the Pengu page (`site/img/station-*.webp`).
   It also reports each station's label position in `window.__anchors` (percent of the frame); the

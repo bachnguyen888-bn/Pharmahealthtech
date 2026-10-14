@@ -3,7 +3,7 @@
     python3 tools/package-pengu-site.py
 
 Unzip it and drag the pengu-site folder onto app.netlify.com/drop (or onto the Deploys tab of an
-existing Netlify site to update it). The ClearHealth page in site/ is not included.
+existing Netlify site to update it).
 """
 import pathlib
 import shutil
