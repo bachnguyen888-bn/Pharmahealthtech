@@ -2,7 +2,7 @@
 # The CSP matches the pages' <meta> tags and adds frame-ancestors, which a meta tag cannot set.
 # The two hashes allow clearhealth-pengu.html's inline <style> and <script>; tools/update-pengu-csp.py keeps them current.
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-5b6nQVAPAPh3htpAdPQvhN+jcgLm15g1yAGFxAR514s='; style-src 'self' 'sha256-uTuyiamjHxRO/SxcNQK+clyIYSjydYu13FYkHYR9DqI='; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-5b6nQVAPAPh3htpAdPQvhN+jcgLm15g1yAGFxAR514s='; style-src 'self' 'sha256-7FUVGr/X21agFUq8zKZFTcgQfKjN6sN/XSEDeasd9sU='; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: no-referrer
